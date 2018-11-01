@@ -13,8 +13,8 @@ typedef struct llnode {
     struct llnode* next;
 } LLNode;
 
-LLNode *createNode(char *element);
+LLNode *createLLNode(char *element);
 
-void append(LLNode *node, char *element);
+void appendToLL(LLNode *node, char *element);
 
 LLNode *getElement(LLNode *node, int index);

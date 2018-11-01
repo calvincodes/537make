@@ -6,13 +6,13 @@
 #include <stdio.h>
 #include "LinkedList.h"
 
-int main() {
-    LLNode* head = createNode("arpit");
-    append(head, "jain");
+int main_1() {
+    LLNode* head = createLLNode("arpit");
+    appendToLL(head, "jain");
     printf("end");
 }
 
-LLNode *createNode(char *element) {
+LLNode *createLLNode(char *element) {
 
     LLNode* llNode = (LLNode *) malloc(sizeof(LLNode));
 
@@ -26,13 +26,18 @@ LLNode *createNode(char *element) {
     return llNode;
 }
 
-void append(LLNode *node, char *element) {
+void appendToLL(LLNode *node, char *element) {
 
     if (node == NULL) {
-        fprintf(stderr, "Null node passed to append function");
+        fprintf(stderr, "Null node passed to appendToLL function");
     }
 
-    LLNode* newNode = createNode(element);
+    LLNode* newNode = createLLNode(element);
+
+    while (node -> next != NULL) {
+        node = node->next;
+    }
+
     node->next = newNode;
     newNode->next = NULL;
 }
