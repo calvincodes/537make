@@ -12,6 +12,11 @@
 #include "LinkedList.h"
 #endif
 
+#ifndef INC_537MAKE_CONSTANTS_H
+#define INC_537MAKE_CONSTANTS_H
+#include "constants.h"
+#endif
+
 typedef struct graphNode {
 
     char* element;

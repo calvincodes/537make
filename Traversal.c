@@ -9,7 +9,6 @@
 #include <sys/wait.h>
 #include <stdlib.h>
 #include "Traversal.h"
-#include "constants.h"
 
 void executeNodeCommands(LLNode* commands) {
 
@@ -25,19 +24,32 @@ void executeNodeCommands(LLNode* commands) {
         else if (pid > 0) { // Parent process
             int status;
             waitpid(pid, &status, 0);
-//            if (status != EXIT_SUCCESS) {
-//                printf("Failed to execute command. Error status %d", status);
-//                _exit(EXIT_FAILURE);
-//            }
+            if (status != EXIT_SUCCESS) {
+                printf("Failed to execute command. Error status %d", status);
+                _exit(EXIT_FAILURE);
+            }
             temphead = temphead->next;
         }
 
         else if (pid == 0) { // Child process
 
-            char** argv = (char**) malloc(MAX_SIZE * sizeof(char));
-            argv[0] = temphead->element;
-//            execvp("echo", argv);
-            printf("echo %s\n", argv[0]);
+//            char *cmd = "echo";
+//            char* argv[3];
+//            argv[0] = "echo";
+//            argv[1] = temphead->element;
+//            argv[2] = (char *)NULL;
+
+            char *cmd = "gcc";
+            char *argv[4];
+            argv[0] = "gcc";
+            argv[1] = "-c";
+            argv[2] = "main.c";
+            argv[3] = NULL;
+
+            execvp(cmd, argv);
+            // The exec() functions only return if an error has occurred.
+            // The return value is -1, and errno is set to indicate the error.
+
             _exit(EXIT_FAILURE);
         }
 
@@ -68,8 +80,8 @@ void traverseAndExecute(GraphNode* root) {
 int main() {
 
     LLNode* all_commands = createLLNode("gcc -c all_1");
-    appendToLL(all_commands, "all_2");
-    appendToLL(all_commands, "all_3");
+    appendToLL(all_commands, "gcc -c all_2");
+    appendToLL(all_commands, "gcc -c all_3");
     GraphNode* all = createGraphNode("all", NULL, all_commands);
 
     LLNode* a_commands = createLLNode("gcc -c a_1");

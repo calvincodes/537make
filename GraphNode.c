@@ -3,9 +3,8 @@
 //
 
 #include <stdlib.h>
-#include <printf.h>
+#include <stdio.h>
 #include "GraphNode.h"
-#include "constants.h"
 
 int main_() {
 
