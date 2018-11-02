@@ -80,35 +80,35 @@ void traverseAndExecute(GraphNode* root) {
 
 int main() {
 
-    LLNode* all_commands = createLLNode("gcc -c temp.c");
-    appendToLL(all_commands, "gcc -c temp.c");
-    appendToLL(all_commands, "gcc -c temp.c");
+    LLNode* all_commands = createLLNode("gcc -c temp.c temp1.c temp2.c");
+    appendToLL(all_commands, "gcc -c main.c");
+    appendToLL(all_commands, "echo all success....");
     GraphNode* all = createGraphNode("all", NULL, all_commands);
 
-    LLNode* a_commands = createLLNode("gcc -c temp.c");
+    LLNode* a_commands = createLLNode("gcc -c main.c");
     GraphNode* a = createGraphNode("a", NULL, a_commands);
     all->children[0] = a;
     a->children = NULL;
 
-    LLNode* b_commands = createLLNode("gcc -c temp.c");
+    LLNode* b_commands = createLLNode("gcc -c main.c");
     GraphNode* b = createGraphNode("b", NULL, b_commands);
     all->children[1] = b;
 
-    LLNode* c_commands = createLLNode("gcc -c temp.c");
+    LLNode* c_commands = createLLNode("gcc -c main.c");
     GraphNode* c = createGraphNode("c", NULL, c_commands);
     b->children[0] = c;
     c->children = NULL;
 
-    LLNode* d_commands = createLLNode("gcc -c temp.c");
+    LLNode* d_commands = createLLNode("gcc -c main.c");
     GraphNode* d = createGraphNode("d", NULL, d_commands);
     all->children[2] = d;
 
-    LLNode* e_commands = createLLNode("gcc -c temp.c");
+    LLNode* e_commands = createLLNode("gcc -c main.c");
     GraphNode* e = createGraphNode("e", NULL, e_commands);
     d->children[0] = e;
     e->children = NULL;
 
-    LLNode* f_commands = createLLNode("gcc -c temp.c");
+    LLNode* f_commands = createLLNode("gcc -c main.c");
     GraphNode* f = createGraphNode("f", NULL, f_commands);
     d->children[1] = f;
     f->children = NULL;
