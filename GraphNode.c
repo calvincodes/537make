@@ -7,7 +7,7 @@
 #include "GraphNode.h"
 #include "constants.h"
 
-int main() {
+int main_() {
 
     LLNode* all_commands = createLLNode(
             "gcc -o prodcomm main.o reader.o munch1.o munch2.o writer.o constants.o queue.o struct_args.o -lpthread");
