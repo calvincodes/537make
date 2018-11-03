@@ -9,6 +9,10 @@
 int main_1() {
     LLNode* head = createLLNode("arpit");
     appendToLL(head, "jain");
+    appendToLL(head, "uwm");
+    appendToLL(head, "intern");
+    appendToLL(head, "lagwa");
+    appendToLL(head, "do");
     printf("end");
 }
 
@@ -34,11 +38,12 @@ void appendToLL(LLNode *node, char *element) {
 
     LLNode* newNode = createLLNode(element);
 
-    while (node -> next != NULL) {
-        node = node->next;
+    LLNode* tempHead = node;
+    while (tempHead -> next != NULL) {
+        tempHead = tempHead->next;
     }
 
-    node->next = newNode;
+    tempHead->next = newNode;
     newNode->next = NULL;
 }
 
