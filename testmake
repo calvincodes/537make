@@ -8,4 +8,4 @@ default_target: allHello. This is a gcc command
 b:c
 c:d
 d:e
-e:p
+ e::p

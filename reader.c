@@ -20,6 +20,37 @@
 #endif //INC_537MAKE_CONSTANTS_H
 
 
+void validateTarget(char *line, unsigned int size, int lineNo){
+    if(size == 0){
+        fprintf(stderr, "%d Invalid line : %s",lineNo, line);
+        exit(EXIT_FAILURE);
+    }
+    if(line[0] == ' '){
+        fprintf(stderr, "%d Invalid line : %s",lineNo, line);
+        exit(EXIT_FAILURE);
+    }
+    int countColon = 0;
+    for(int i=0;i<size;i++){
+        if(line[i] == ':')
+            countColon++;
+    }
+    if(countColon != 1){
+        fprintf(stderr, "%d Invalid line : %s",lineNo, line);
+        exit(EXIT_FAILURE);
+    }
+}
+
+void validateCommands(char *line, unsigned int size, int lineNo){
+    if(size == 0){
+        fprintf(stderr, "%d Invalid line : %s",lineNo, line);
+        exit(EXIT_FAILURE);
+    }
+    int countTab = 0;
+    for(int i=0;i<size;i++){
+        if(line[i] == '\t')
+            countTab++;
+    }
+}
 void reader() {
     FILE *file_pointer;
     char *line = (char *) malloc(MAX_SIZE * sizeof(char));
@@ -51,8 +82,6 @@ void reader() {
     int c;
     do {
         lineNo++;
-
-
         // Concatente everything line;
         do {
             c = fgetc(file_pointer);
@@ -73,6 +102,7 @@ void reader() {
 
         if (line[0] == '\t') {
             // Commands
+            validateCommands(line, index, lineNo);
 
             token = strtok(line, "\t");
             if (node == NULL) {
@@ -93,6 +123,7 @@ void reader() {
             line = (char *) malloc(MAX_SIZE * sizeof(char));
             continue;
         } else {
+            validateTarget(line, index, lineNo);
             // Now check if it's a target or not
 
             token = strtok(line, ":");
