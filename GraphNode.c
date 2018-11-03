@@ -100,7 +100,7 @@ int cyclic_util(int nodeNo, int visited[], int stack[], GraphNode *graphNodeArra
         stack[nodeNo] = 1;
     }
     for(int i=0;i<MAX_SIZE && node->children[i] != NULL;i++){
-        if (!visited[node->children[i]->nodeNo] && cyclic_util(node->children[i]->nodeNo, visited, stack, graphNodeArray, graphNodeArray[nodeNo]))
+        if (!visited[node->children[i]->nodeNo] && cyclic_util(node->children[i]->nodeNo, visited, stack, graphNodeArray, graphNodeArray[nodeNo]->children[i]))
             return 1;
         else if (stack[node->children[i]->nodeNo])
             return 1;
@@ -109,17 +109,17 @@ int cyclic_util(int nodeNo, int visited[], int stack[], GraphNode *graphNodeArra
     return 0;
 }
 
-int is_cycle_found(unsigned int size, GraphNode *graphNodeArray[]){
+int is_cycle_found(unsigned int graphSize, GraphNode *graphNodeArray[]){
 
-    int visited[size];
-    int stack[size];
+    int visited[graphSize];
+    int stack[graphSize];
 
-    for(int i=0;i<size;i++ ){
+    for(int i=0;i<graphSize;i++ ){
         visited[i] = 0;
         stack[i] = 0;
     }
 
-    for(int i=0;i<size;i++){
+    for(int i=0;i<graphSize;i++){
         if(cyclic_util(graphNodeArray[i]->nodeNo, visited, stack, graphNodeArray, graphNodeArray[i])){
             return 1;
         }

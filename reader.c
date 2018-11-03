@@ -143,6 +143,7 @@ void reader() {
 
     createConnections(graphNodeArray, curNode);
     int isCycleFound = is_cycle_found(curNode, graphNodeArray);
+    printf("Dependency found %d", isCycleFound);
 //    for(int i = 0 ;i<curNode;i++){
 //        printf("%s\n",graphNodeArray[i]->element);
 //    }
