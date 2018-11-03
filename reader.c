@@ -31,6 +31,10 @@ void validateTarget(char *line, unsigned int size, int lineNo){
     }
     int countColon = 0;
     for(int i=0;i<size;i++){
+        if(countColon == 0  && line[i] == ' '){
+            fprintf(stderr, "%d Invalid line : %s",lineNo, line);
+            exit(EXIT_FAILURE);
+        }
         if(line[i] == ':')
             countColon++;
     }
