@@ -3,59 +3,117 @@
 //
 
 #include <stddef.h>
+#include <stdbool.h>
 #include <sys/types.h>
+#include <sys/stat.h>
 #include <unistd.h>
 #include <printf.h>
 #include <sys/wait.h>
 #include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <fcntl.h>
 #include "Traversal.h"
 
-void executeNodeCommands(LLNode* commands) {
+/**
+ * Return ture if lhs is less than rhs
+ * @param lhs
+ * @param rhs
+ * @return
+ */
 
-    LLNode* temphead = commands;
-    while (temphead != NULL) {
-        pid_t parent = getpid();
-        pid_t pid = fork();
-        if (pid == -1) { // Error, failed to fork()
-            printf("Failed to fork(). Terminating at once.");
-            _exit(EXIT_FAILURE);
+bool isLHSLessThanRHS(struct timespec lhs, struct timespec rhs) {
+
+//    printf("LHS lmd: %lld.%.9ld\n", (long long)lhs.tv_sec, lhs.tv_nsec);
+//    printf("RHS lmd: %lld.%.9ld\n", (long long)rhs.tv_sec, rhs.tv_nsec);
+
+    if (lhs.tv_sec == rhs.tv_sec)
+        return lhs.tv_nsec < rhs.tv_nsec;
+    else
+        return lhs.tv_sec < rhs.tv_sec;
+}
+
+
+bool commandExecutionRequired(GraphNode* root) {
+
+    if(root->dependencies != NULL) {
+
+        struct stat targetStat;
+        FILE *targetPointer = fopen(root->element, "r");
+        fstat(fileno(targetPointer), &targetStat);
+        fclose(targetPointer);
+        struct timespec targetLmd = targetStat.st_mtim;
+
+        LLNode* dependencies = root->dependencies;
+        while(dependencies) {
+            printf("Dependency: %s\n", dependencies->element);
+            struct stat dependencyStat;
+            FILE *dependencyPointer = fopen(dependencies->element, "r");
+            fstat(fileno(dependencyPointer), &dependencyStat);
+            fclose(dependencyPointer);
+            struct timespec dependencyLmd = dependencyStat.st_mtim;
+
+            if(isLHSLessThanRHS(targetLmd, dependencyLmd)) {
+                return true;
+            }
+
+            dependencies = dependencies->next;
         }
 
-        else if (pid > 0) { // Parent process
-            int status;
-            waitpid(pid, &status, 0);
-            if (status != EXIT_SUCCESS) {
-                printf("Failed to execute command. Error status %d", status);
+        return false;
+    }
+
+    return true;
+}
+
+void executeNodeCommands(GraphNode* root) {
+
+    if(commandExecutionRequired(root)) {
+        LLNode* temphead = root->commands;
+        while (temphead != NULL) {
+            pid_t parent = getpid();
+            pid_t pid = fork();
+            if (pid == -1) { // Error, failed to fork()
+                printf("Failed to fork(). Terminating at once.");
                 _exit(EXIT_FAILURE);
             }
-            temphead = temphead->next;
-        }
 
-        else if (pid == 0) { // Child process
+            else if (pid > 0) { // Parent process
+                int status;
+                waitpid(pid, &status, 0);
+                if (status != EXIT_SUCCESS) {
+                    printf("Failed to execute command. Error status %d", status);
+                    _exit(EXIT_FAILURE);
+                }
+                temphead = temphead->next;
+            }
 
-//            char *cmd = "echo";
-//            char* argv[3];
-//            argv[0] = "echo";
-//            argv[1] = temphead->element;
-//            argv[2] = (char *)NULL;
+            else if (pid == 0) { // Child process
 
-            char *cmd = "gcc";
-            char *argv[4];
-            argv[0] = "gcc";
-            argv[1] = "-c";
-            argv[2] = "main.c";
-            argv[3] = NULL;
+                char copiedCmd[MAX_SIZE];
+                strncpy(copiedCmd, temphead->element, MAX_SIZE);
+                char *argv[MAX_SIZE];
+                int i = 0;
+                char *split = strtok(copiedCmd, " ");
+                while (split) {
+                    argv[i] = split;
+                    i++;
+                    split = strtok(NULL, " ");
+                }
+                argv[i] = NULL;
+                char *cmd = argv[0];
 
-            execvp(cmd, argv);
-            // The exec() functions only return if an error has occurred.
-            // The return value is -1, and errno is set to indicate the error.
+                execvp(cmd, argv);
+                // The exec() functions only return if an error has occurred.
+                // The return value is -1, and errno is set to indicate the error.
 
-            _exit(EXIT_FAILURE);
-        }
+                _exit(EXIT_FAILURE);
+            }
 
-        else { // IMPOSSIBLE ZONE
-            printf("PID can not be negative. Terminating at once.");
-            _exit(EXIT_SUCCESS);
+            else { // IMPOSSIBLE ZONE
+                printf("PID can not be negative. Terminating at once.");
+                _exit(EXIT_SUCCESS);
+            }
         }
     }
 }
@@ -63,7 +121,7 @@ void executeNodeCommands(LLNode* commands) {
 void traverseAndExecute(GraphNode* root) {
 
     if (root->children == NULL) {
-        executeNodeCommands(root->commands);
+        executeNodeCommands(root);
         return;
     }
 
@@ -74,43 +132,53 @@ void traverseAndExecute(GraphNode* root) {
         traverseAndExecute(root->children[i]);
     }
 
-    executeNodeCommands(root->commands);
+    executeNodeCommands(root);
 }
 
-//int main() {
-//
-//    LLNode* all_commands = createLLNode("gcc -c all_1");
-//    appendToLL(all_commands, "gcc -c all_2");
-//    appendToLL(all_commands, "gcc -c all_3");
-//    GraphNode* all = createGraphNode("all", NULL, all_commands);
-//
-//    LLNode* a_commands = createLLNode("gcc -c a_1");
-//    GraphNode* a = createGraphNode("a", NULL, a_commands);
-//    all->children[0] = a;
-//    a->children = NULL;
-//
-//    LLNode* b_commands = createLLNode("gcc -c b_1");
-//    GraphNode* b = createGraphNode("b", NULL, b_commands);
-//    all->children[1] = b;
-//
-//    LLNode* c_commands = createLLNode("gcc -c c_1");
-//    GraphNode* c = createGraphNode("c", NULL, c_commands);
-//    b->children[0] = c;
-//    c->children = NULL;
-//
-//    LLNode* d_commands = createLLNode("gcc -c d_1");
-//    GraphNode* d = createGraphNode("d", NULL, d_commands);
-//    all->children[2] = d;
-//
-//    LLNode* e_commands = createLLNode("gcc -c e_1");
-//    GraphNode* e = createGraphNode("e", NULL, e_commands);
-//    d->children[0] = e;
-//    e->children = NULL;
-//
-//    LLNode* f_commands = createLLNode("gcc -c f_1");
-//    GraphNode* f = createGraphNode("f", NULL, f_commands);
-//    d->children[1] = f;
-//    f->children = NULL;
-//
-//    traverseAndExecute(all);
-//}
+
+int main_5() {
+
+    LLNode* all_dependencies = createLLNode("temp.c");
+    appendToLL(all_dependencies, "temp1.c");
+    LLNode* all_commands = createLLNode("gcc -c temp.c temp1.c temp2.c");
+    appendToLL(all_commands, "gcc -c main.c");
+    appendToLL(all_commands, "echo all success....");
+    GraphNode* all = createGraphNode("temp2.c", all_dependencies, all_commands);
+
+    LLNode* a_commands = createLLNode("gcc -c main.c");
+    appendToLL(a_commands, "echo a success....");
+    GraphNode* a = createGraphNode("main.c", NULL, a_commands);
+    all->children[0] = a;
+    a->children = NULL;
+
+    LLNode* b_commands = createLLNode("gcc -c main.c");
+    appendToLL(b_commands, "echo b success....");
+    GraphNode* b = createGraphNode("temp.c", NULL, b_commands);
+    all->children[1] = b;
+
+    LLNode* c_commands = createLLNode("gcc -c main.c");
+    appendToLL(c_commands, "echo c success....");
+    GraphNode* c = createGraphNode("temp1.c", NULL, c_commands);
+    b->children[0] = c;
+    c->children = NULL;
+
+    LLNode* d_commands = createLLNode("gcc -c main.c");
+    appendToLL(d_commands, "echo d success....");
+    GraphNode* d = createGraphNode("temp2.c", NULL, d_commands);
+    all->children[2] = d;
+
+    LLNode* e_commands = createLLNode("gcc -c main.c");
+    appendToLL(e_commands, "echo e success....");
+    GraphNode* e = createGraphNode("temp.c", NULL, e_commands);
+    d->children[0] = e;
+    e->children = NULL;
+
+    LLNode* f_commands = createLLNode("gcc -c main.c");
+    appendToLL(f_commands, "echo f success....");
+    GraphNode* f = createGraphNode("main.c", NULL, f_commands);
+    d->children[1] = f;
+    f->children = NULL;
+
+    traverseAndExecute(all);
+}
+
