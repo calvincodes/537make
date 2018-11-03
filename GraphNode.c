@@ -83,7 +83,6 @@ GraphNode* createConnections(GraphNode* graphArray[], unsigned int size){
         while(llNode){
             int currChildCount = 0;
             for(int j =0;j<size;j++){
-                printf("%s\n", llNode->element);
                 if(strcmp(llNode->element, graphArray[j]->element) == 0){
                     graphArray[i]->children[currChildCount++] = graphArray[j];
                 }
