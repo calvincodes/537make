@@ -3,6 +3,7 @@
 //
 
 #include <stddef.h>
+#include <stdbool.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -10,7 +11,6 @@
 #include <sys/wait.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdbool.h>
 #include <stdio.h>
 #include <fcntl.h>
 #include "Traversal.h"
@@ -21,6 +21,7 @@
  * @param rhs
  * @return
  */
+
 bool isLHSLessThanRHS(struct timespec lhs, struct timespec rhs) {
 
 //    printf("LHS lmd: %lld.%.9ld\n", (long long)lhs.tv_sec, lhs.tv_nsec);
@@ -134,7 +135,8 @@ void traverseAndExecute(GraphNode* root) {
     executeNodeCommands(root);
 }
 
-int main() {
+
+int main_5() {
 
     LLNode* all_dependencies = createLLNode("temp.c");
     appendToLL(all_dependencies, "temp1.c");
@@ -179,3 +181,4 @@ int main() {
 
     traverseAndExecute(all);
 }
+

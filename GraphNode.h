@@ -19,10 +19,15 @@
 
 typedef struct graphNode {
 
+    //TODO: Change it to target name
     char* element;
+    int nodeNo;
     LLNode* dependencies;
     LLNode* commands;
     struct graphNode** children;
 } GraphNode;
 
 GraphNode* createGraphNode(char *element, LLNode* dependencies, LLNode* commands);
+
+GraphNode* createConnections(GraphNode* graphArray[], unsigned int size);
+int is_cycle_found(unsigned int size, GraphNode *graphNodeArray[]);

@@ -4,6 +4,8 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
+#include <stdbool.h>
 #include "GraphNode.h"
 
 int main_() {
@@ -60,10 +62,67 @@ GraphNode* createGraphNode(char *element, LLNode* dependencies, LLNode* commands
         fprintf(stderr, "Could not allocate memory for LinkedList data");
         exit(1);
     }
-
     graphNode->element = element;
     graphNode->dependencies = dependencies;
     graphNode->commands = commands;
     graphNode->children = (GraphNode**) malloc(MAX_SIZE * sizeof(graphNode));
     return graphNode;
 }
+
+GraphNode* createConnections(GraphNode* graphArray[], unsigned int size){
+    GraphNode *root = NULL;
+
+    for(int i = 0;i<size;i++){
+        graphArray[i]->nodeNo = i;
+    }
+    for(int i = 0;i<size;i++){
+        if(!root){
+            root = graphArray[i];
+        }
+        LLNode *llNode = graphArray[i]->dependencies;
+        while(llNode){
+            int currChildCount = 0;
+            for(int j =0;j<size;j++){
+                if(strcmp(llNode->element, graphArray[j]->element) == 0){
+                    graphArray[i]->children[currChildCount++] = graphArray[j];
+                }
+            }
+            llNode = llNode->next;
+        }
+    }
+    return root;
+}
+
+int cyclic_util(int nodeNo, int visited[], int stack[], GraphNode *graphNodeArray[], GraphNode* node ){
+    if(!visited[nodeNo]){
+        visited[nodeNo] = 1;
+        stack[nodeNo] = 1;
+    }
+    for(int i=0;i<MAX_SIZE && node->children[i] != NULL;i++){
+        if (!visited[node->children[i]->nodeNo] && cyclic_util(node->children[i]->nodeNo, visited, stack, graphNodeArray, graphNodeArray[nodeNo]->children[i]))
+            return 1;
+        else if (stack[node->children[i]->nodeNo])
+            return 1;
+    }
+    stack[node->nodeNo] = 0;
+    return 0;
+}
+
+int is_cycle_found(unsigned int graphSize, GraphNode *graphNodeArray[]){
+
+    int visited[graphSize];
+    int stack[graphSize];
+
+    for(int i=0;i<graphSize;i++ ){
+        visited[i] = 0;
+        stack[i] = 0;
+    }
+
+    for(int i=0;i<graphSize;i++){
+        if(cyclic_util(graphNodeArray[i]->nodeNo, visited, stack, graphNodeArray, graphNodeArray[i])){
+            return 1;
+        }
+    }
+    return 0;
+}
+
