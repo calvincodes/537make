@@ -3,8 +3,8 @@ WARNING_FLAGS = -Wall -Wextra
 EXE = 537make
 SCAN_BUILD_DIR = scan-build-out
 
-all: main.o LinkedList.o GraphNode.o constants.o Traversal.o
-	$(CC) -o $(EXE) main.o LinkedList.o GraphNode.o constants.o Traversal.o
+all: main.o LinkedList.o GraphNode.o constants.o Traversal.o reader.o
+	$(CC) -o $(EXE) main.o LinkedList.o GraphNode.o constants.o Traversal.o reader.o
 
 clean:
 	rm -f $(EXE) *.o
@@ -24,6 +24,9 @@ constants.o: constants.c constants.h
 
 Traversal.o: Traversal.c Traversal.h LinkedList.h GraphNode.h
 	$(CC) $(WARNING_FLAGS) -c Traversal.c
+
+reader.o:  reader.h reader.c LinkedList.h constants.h GraphNode.h
+	$(CC) $(WARNING_FLAGS) -c reader.c
 
 #
 # Run the Clang Static Analyzer
