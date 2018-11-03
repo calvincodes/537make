@@ -5,20 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "GraphNode.h"
-
-#ifndef INC_537MAKE_READER_H
-#define INC_537MAKE_READER_H
-
 #include "reader.h"
-
-#endif //INC_537MAKE_READER_H
-
-#ifndef INC_537MAKE_CONSTANTS_H
-#define INC_537MAKE_CONSTANTS_H
-#include "constants.h"
-#endif //INC_537MAKE_CONSTANTS_H
-
 
 void reader() {
     FILE *file_pointer;
@@ -144,9 +131,15 @@ void reader() {
     createConnections(graphNodeArray, curNode);
     int isCycleFound = is_cycle_found(curNode, graphNodeArray);
     printf("Dependency found %d", isCycleFound);
-//    for(int i = 0 ;i<curNode;i++){
-//        printf("%s\n",graphNodeArray[i]->element);
-//    }
+
+    GraphNode* root = graphNodeArray[0];
+    int i = 0;
+
+    while (root != NULL) {
+        traverseAndExecute(root);
+        i++;
+        root = graphNodeArray[i];
+    }
 
     if (fclose(file_pointer)) {
         fprintf(stderr, "Failed to close makefile or Makefile");

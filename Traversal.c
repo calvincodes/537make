@@ -120,7 +120,8 @@ void executeNodeCommands(GraphNode* root) {
 
 void traverseAndExecute(GraphNode* root) {
 
-    if (root->children == NULL) {
+    printf("root->element = %s", root->element);
+    if (root->children[0] == NULL) {
         executeNodeCommands(root);
         return;
     }
