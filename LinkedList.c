@@ -4,7 +4,9 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include "LinkedList.h"
+#include "constants.h"
 
 int main_1() {
     LLNode* head = createLLNode("arpit");
@@ -22,10 +24,11 @@ LLNode *createLLNode(char *element) {
 
     if(!llNode){
         fprintf(stderr, "Could not allocate memory for LinkedList data");
-        exit(1);
+        exit(EXIT_FAILURE);
     }
 
-    llNode->element = element;
+    llNode->element = malloc(MAX_SIZE * sizeof(char*));
+    strcpy(llNode->element, element);
     llNode->next = NULL;
     return llNode;
 }
