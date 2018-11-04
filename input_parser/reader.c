@@ -151,7 +151,6 @@ void reader(struct_input unprocessedInput) {
         int targetFound = 0;
         for(unsigned int i = 0;i<curNode;i++){
             if(strcmp(graphNodeArray[i]->element, unprocessedInput.targets_to_build[x]) == 0){
-                printf("%s Target found",  unprocessedInput.targets_to_build[x]);
                 targetFound = 1;
                 traverseAndExecute(graphNodeArray[i]);
                 break;
