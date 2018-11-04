@@ -10,7 +10,7 @@
 #include "../utils/validator.h"
 
 
-void reader() {
+void reader(struct_input unprocessedInput) {
     FILE *file_pointer;
     char *line = (char *) malloc(MAX_SIZE * sizeof(char));
 
@@ -20,16 +20,24 @@ void reader() {
     }
 
     graph_node *graphNodeArray[MAX_SIZE];
-
-    // Reading Makefile
-    file_pointer = fopen("Makefile", "r");
-    if (!file_pointer) {
-        // In case readfile is not present. Trying reading Makefile
-        file_pointer = fopen("makefile", "r");
-        // If this also fails then throw error
-        if (!file_pointer) {
-            fprintf(stderr, "Could not find makefile or Makefile");
+    if(unprocessedInput.make_file_name != NULL){
+        file_pointer = fopen(unprocessedInput.make_file_name, "r");
+        if(!file_pointer){
+            fprintf(stderr, "Could not find %s", unprocessedInput.make_file_name);
             exit(EXIT_FAILURE);
+        }
+    } else {
+
+        // Reading Makefile
+        file_pointer = fopen("makefile", "r");
+        if (!file_pointer) {
+            // In case readfile is not present. Trying reading Makefile
+            file_pointer = fopen("Makefile", "r");
+            // If this also fails then throw error
+            if (!file_pointer) {
+                fprintf(stderr, "Could not find makefile or Makefile");
+                exit(EXIT_FAILURE);
+            }
         }
     }
     int lineNo = 0;
@@ -132,19 +140,22 @@ void reader() {
     int isCycleFound = is_cycle_found(curNode, graphNodeArray);
 
     if (isCycleFound) {
-        printf("Cyclic dependency found. Terminating.");
+        fprintf(stderr, "Cyclic dependency found. Terminating.");
         exit(EXIT_FAILURE);
     }
 
-
-    graph_node *root = graphNodeArray[0];
-    int i = 0;
-
-    while (root != NULL) {
-        traverseAndExecute(root);
-        i++;
-        root = graphNodeArray[i];
+    for(unsigned int x = 0; x < MAX_SIZE; x++) {
+        if(unprocessedInput.targets_to_build[x] == NULL){
+            break;
+        }
+        for(unsigned int i = 0;i<curNode;i++){
+            if(strcmp(graphNodeArray[i]->element, unprocessedInput.targets_to_build[x]) == 0){
+                traverseAndExecute(graphNodeArray[i]);
+                break;
+            }
+        }
     }
+
 
     if (fclose(file_pointer)) {
         fprintf(stderr, "Failed to close makefile or Makefile");
@@ -152,7 +163,3 @@ void reader() {
     }
 }
 
-int main() {
-    reader();
-    exit(EXIT_SUCCESS);
-}

@@ -3,8 +3,8 @@ WARNING_FLAGS = -Wall -Wextra
 EXE = 537make
 SCAN_BUILD_DIR = scan-build-out
 
-all: driver.o linked_list.o graph.o constants.o traversal.o reader.o command_executor.o validator.o
-	$(CC) -o $(EXE) driver.o linked_list.o graph.o constants.o traversal.o reader.o command_executor.o validator.o
+all: driver.o struct_input.o linked_list.o graph.o constants.o traversal.o reader.o option_parser.o command_executor.o validator.o
+	$(CC) -o $(EXE) driver.o struct_input.o linked_list.o graph.o constants.o traversal.o reader.o option_parser.o command_executor.o validator.o
 
 clean:
 	rm -f $(EXE) *.o
@@ -12,6 +12,9 @@ clean:
 
 driver.o: driver.c entities/linked_list.h entities/graph.h utils/constants.h target_executor/traversal.h
 	$(CC) $(WARNING_FLAGS) -c driver.c
+
+struct_input.o:
+	$(CC) $(WARNING_FLAGS) -c entities/struct_input.c
 
 linked_list.o: entities/linked_list.c entities/linked_list.h
 	$(CC) $(WARNING_FLAGS) -c entities/linked_list.c
@@ -24,6 +27,9 @@ constants.o: utils/constants.c utils/constants.h
 
 reader.o: input_parser/reader.h input_parser/reader.c entities/linked_list.h utils/constants.h entities/graph.h
 	$(CC) $(WARNING_FLAGS) -c input_parser/reader.c
+
+option_parser.o:
+	$(CC) $(WARNING_FLAGS) -c input_parser/option_parser.c
 
 traversal.o: target_executor/traversal.c target_executor/traversal.h entities/linked_list.h entities/graph.h
 	$(CC) $(WARNING_FLAGS) -c target_executor/traversal.c

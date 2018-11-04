@@ -27,4 +27,9 @@
 #include "../utils/validator.h"
 #endif //INC_537MAKE_CONSTANTS_H
 
-void reader();
+#ifndef INC_537MAKE_STRUCT_INPUT_H
+#define INC_537MAKE_STRUCT_INPUT_H
+#include "../entities/struct_input.h"
+#endif
+
+void reader(struct_input unprocessedInput);
