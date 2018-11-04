@@ -8,7 +8,6 @@
 int main(int argc, char *argv[]) {
 
     struct_input unprocessedInput = parse_and_get_unprocessed_input(argc, argv);
-    printf("unprocessedInput -> %s  %s", *unprocessedInput.targets_to_build, unprocessedInput.make_file_name);
     reader(unprocessedInput);
 
 }

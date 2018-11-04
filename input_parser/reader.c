@@ -140,7 +140,7 @@ void reader(struct_input unprocessedInput) {
     int isCycleFound = is_cycle_found(curNode, graphNodeArray);
 
     if (isCycleFound) {
-        printf("Cyclic dependency found. Terminating.");
+        fprintf(stderr, "Cyclic dependency found. Terminating.");
         exit(EXIT_FAILURE);
     }
 
