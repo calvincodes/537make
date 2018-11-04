@@ -52,12 +52,3 @@ struct_input parse_and_get_unprocessed_input(int argc, char **argv) {
 
     return unprocessedInputArg;
 }
-
-struct_input get_default_input_arg() {
-
-    struct_input defaultInputArg;
-    defaultInputArg.make_file_name = NULL;
-    defaultInputArg.targets_to_build[0] = "all";
-
-    return defaultInputArg;
-}
