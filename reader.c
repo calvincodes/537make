@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include "GraphNode.h"
 
 #ifndef INC_537MAKE_READER_H
@@ -31,10 +32,10 @@ void validateTarget(char *line, unsigned int size, int lineNo){
     }
     int countColon = 0;
     for(int i=0;i<size;i++){
-        if(countColon == 0  && line[i] == ' '){
-            fprintf(stderr, "%d Invalid line : %s",lineNo, line);
-            exit(EXIT_FAILURE);
-        }
+//        if(countColon == 0  && line[i] == ' '){
+//            fprintf(stderr, "%d Invalid line : %s",lineNo, line);
+//            exit(EXIT_FAILURE);
+//        }
         if(line[i] == ':')
             countColon++;
     }
@@ -42,6 +43,19 @@ void validateTarget(char *line, unsigned int size, int lineNo){
         fprintf(stderr, "%d Invalid line : %s",lineNo, line);
         exit(EXIT_FAILURE);
     }
+}
+
+char* stripWhiteSpace(char *str) {
+    char *newStr = malloc(MAX_SIZE * sizeof(char));
+    int i=0;
+    while(*str != '\0'){
+        if(*str!= ' '){
+            *(newStr + i++) = *str;
+        }
+        str++;
+
+    }
+    return newStr;
 }
 
 void validateCommands(char *line, unsigned int size, int lineNo){
@@ -138,13 +152,15 @@ void reader() {
             }
 
             char *targetName = malloc(sizeof(char) * MAX_SIZE);
+
             strcpy(targetName, token);
+            targetName = stripWhiteSpace(targetName);
 
             token = strtok(NULL, " ");
-            if (!token) {
-                fprintf(stderr, "%d: Invalid line : %s\n", lineNo, line);
-                exit(EXIT_FAILURE);
-            }
+//            if (!token) {
+//                fprintf(stderr, "%d: Invalid line : %s\n", lineNo, line);
+//                exit(EXIT_FAILURE);
+//            }
             // New Target found. Create a new graph node.
 
             node = createGraphNode(targetName, NULL, NULL);
@@ -164,10 +180,10 @@ void reader() {
 
                 token = strtok(NULL, " ");
             }
-            if (total_dep == 0) {
-                fprintf(stderr, "%d: Invalid line : %s\n", lineNo, line);
-                exit(EXIT_FAILURE);
-            }
+//            if (total_dep == 0) {
+//                fprintf(stderr, "%d: Invalid line : %s\n", lineNo, line);
+//                exit(EXIT_FAILURE);
+//            }
         }
         index = 0;
         free(line);
@@ -178,10 +194,14 @@ void reader() {
 
     createConnections(graphNodeArray, curNode);
     int isCycleFound = is_cycle_found(curNode, graphNodeArray);
-    printf("Dependency found %d", isCycleFound);
-//    for(int i = 0 ;i<curNode;i++){
-//        printf("%s\n",graphNodeArray[i]->element);
-//    }
+//    printf("Dependency found %d", isCycleFound);
+    for(int i = 0 ;i<curNode;i++){
+        printf("%s\nDependencies ",graphNodeArray[i]->element);
+        for(int j = 0; graphNodeArray[i]->children[j] != NULL;j++){
+            printf("%s",graphNodeArray[i]->children[j]->element);
+        }
+        printf("\n");
+    }
 
     if (fclose(file_pointer)) {
         fprintf(stderr, "Failed to close makefile or Makefile");
