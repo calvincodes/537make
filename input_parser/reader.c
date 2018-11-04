@@ -192,7 +192,7 @@ void reader() {
     }
 }
 
-int main() {
+int main_read() {
     reader();
     exit(EXIT_SUCCESS);
 }
