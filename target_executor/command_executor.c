@@ -69,7 +69,7 @@ bool commandExecutionRequired(graph_node* root) {
     return true;
 }
 
-void executeNodeCommands(graph_node* root) {
+bool executeNodeCommands(graph_node* root) {
 
     if(commandExecutionRequired(root)) {
         linked_list_node* temphead = root->commands;
@@ -159,5 +159,9 @@ void executeNodeCommands(graph_node* root) {
                 _exit(EXIT_SUCCESS);
             }
         }
+
+        return true;
     }
+
+    return false;
 }

@@ -2,6 +2,8 @@
 // Created by Arpit Jain on 11/3/18.
 //
 
+#include <stdbool.h>
+
 #ifndef INC_537MAKE_COMMAND_EXECUTOR_H
 #define INC_537MAKE_COMMAND_EXECUTOR_H
 
@@ -22,4 +24,4 @@
 #include "traversal.h"
 #endif
 
-void executeNodeCommands(graph_node* root);
+bool executeNodeCommands(graph_node* root);

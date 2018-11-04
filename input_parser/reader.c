@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <stdbool.h>
 #include "reader.h"
 #include "../utils/validator.h"
 
@@ -152,7 +153,10 @@ void reader(struct_input unprocessedInput) {
         for(unsigned int i = 0;i<curNode;i++){
             if(strcmp(graphNodeArray[i]->element, unprocessedInput.targets_to_build[x]) == 0){
                 targetFound = 1;
-                traverseAndExecute(graphNodeArray[i]);
+                bool executed = traverseAndExecute(graphNodeArray[i]);
+                if (!executed) {
+                    printf("537make: '%s' is up to date.\n", graphNodeArray[i]->element);
+                }
                 break;
             }
         }
