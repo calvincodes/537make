@@ -9,12 +9,12 @@
 
 #ifndef PROJECT_NODE_H
 #define PROJECT_NODE_H
-#include "LinkedList.h"
+#include "linked_list.h"
 #endif
 
 #ifndef INC_537MAKE_CONSTANTS_H
 #define INC_537MAKE_CONSTANTS_H
-#include "constants.h"
+#include "../utils/constants.h"
 #endif
 
 typedef struct graphNode {
@@ -22,12 +22,13 @@ typedef struct graphNode {
     //TODO: Change it to target name
     char* element;
     int nodeNo;
-    LLNode* dependencies;
-    LLNode* commands;
+    linked_list_node* dependencies;
+    linked_list_node* commands;
     struct graphNode** children;
-} GraphNode;
+} graph_node;
 
-GraphNode* createGraphNode(char *element, LLNode* dependencies, LLNode* commands);
+graph_node* createGraphNode(char *element, linked_list_node* dependencies, linked_list_node* commands);
 
-GraphNode* createConnections(GraphNode* graphArray[], unsigned int size);
-int is_cycle_found(unsigned int size, GraphNode *graphNodeArray[]);
+graph_node* createConnections(graph_node* graphArray[], unsigned int size);
+
+int is_cycle_found(unsigned int size, graph_node *graphNodeArray[]);

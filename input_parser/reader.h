@@ -9,17 +9,17 @@
 
 #ifndef INC_537MAKE_CONSTANTS_H
 #define INC_537MAKE_CONSTANTS_H
-#include "constants.h"
+#include "../utils/constants.h"
 #endif //INC_537MAKE_CONSTANTS_H
 
 #ifndef INC_537MAKE_GRAPHNODE_H
 #define INC_537MAKE_GRAPHNODE_H
-#include "GraphNode.h"
+#include "../entities/graph.h"
 #endif //INC_537MAKE_GRAPHNODE_H
 
 #ifndef INC_537MAKE_TRAVERSAL_H
 #define INC_537MAKE_TRAVERSAL_H
-#include "Traversal.h"
+#include "../target_executor/traversal.h"
 #endif //INC_537MAKE_TRAVERSAL_H
 
 void reader();

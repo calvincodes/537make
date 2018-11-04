@@ -11,10 +11,10 @@
 typedef struct llnode {
     char* element;
     struct llnode* next;
-} LLNode;
+} linked_list_node;
 
-LLNode *createLLNode(char *element);
+linked_list_node *createLLNode(char *element);
 
-void appendToLL(LLNode *node, char *element);
+void appendToLL(linked_list_node *node, char *element);
 
-LLNode *getElement(LLNode *node, int index);
+linked_list_node *getElement(linked_list_node *node, int index);

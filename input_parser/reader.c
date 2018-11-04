@@ -6,20 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include "GraphNode.h"
-
-#ifndef INC_537MAKE_READER_H
-#define INC_537MAKE_READER_H
-
 #include "reader.h"
-
-#endif //INC_537MAKE_READER_H
-
-#ifndef INC_537MAKE_CONSTANTS_H
-#define INC_537MAKE_CONSTANTS_H
-#include "constants.h"
-#endif //INC_537MAKE_CONSTANTS_H
-
 
 void validateTarget(char *line, unsigned int size, int lineNo) {
     if (size == 0) {
@@ -32,10 +19,6 @@ void validateTarget(char *line, unsigned int size, int lineNo) {
     }
     int countColon = 0;
     for (int i = 0; i < size; i++) {
-//        if(countColon == 0  && line[i] == ' '){
-//            fprintf(stderr, "%d Invalid line : %s",lineNo, line);
-//            exit(EXIT_FAILURE);
-//        }
         if (line[i] == ':')
             countColon++;
     }
@@ -80,7 +63,7 @@ void reader() {
     }
 
     size_t len = 0;
-    GraphNode *graphNodeArray[MAX_SIZE];
+    graph_node *graphNodeArray[MAX_SIZE];
 
     // Reading Makefile
     file_pointer = fopen("testmake", "r");
@@ -97,7 +80,7 @@ void reader() {
     unsigned int curNode = 0;
     unsigned int index = 0;
     // Read line by line the contents of the file
-    GraphNode *node = NULL;
+    graph_node *node = NULL;
     int c;
     do {
         lineNo++;
@@ -129,7 +112,7 @@ void reader() {
                 exit(EXIT_FAILURE);
             } else {
                 if (!node->commands) {
-                    LLNode *llNode = createLLNode(token);
+                    linked_list_node *llNode = createLLNode(token);
                     node->commands = llNode;
                 } else {
                     appendToLL(node->commands, token);
@@ -158,12 +141,8 @@ void reader() {
             targetName = stripWhiteSpace(targetName);
 
             token = strtok(NULL, " ");
-//            if (!token) {
-//                fprintf(stderr, "%d: Invalid line : %s\n", lineNo, line);
-//                exit(EXIT_FAILURE);
-//            }
-            // New Target found. Create a new graph node.
 
+            // New Target found. Create a new graph node.
             node = createGraphNode(targetName, NULL, NULL);
             graphNodeArray[curNode++] = node;
 
@@ -172,7 +151,7 @@ void reader() {
                 if (strlen(token) > 0) {
                     total_dep++;
                     if (!node->dependencies) {
-                        LLNode *llNode = createLLNode(token);
+                        linked_list_node *llNode = createLLNode(token);
                         node->dependencies = llNode;
                     } else {
                         appendToLL(node->dependencies, token);
@@ -181,10 +160,6 @@ void reader() {
 
                 token = strtok(NULL, " ");
             }
-//            if (total_dep == 0) {
-//                fprintf(stderr, "%d: Invalid line : %s\n", lineNo, line);
-//                exit(EXIT_FAILURE);
-//            }
         }
         index = 0;
         free(line);
@@ -196,21 +171,13 @@ void reader() {
     createConnections(graphNodeArray, curNode);
     int isCycleFound = is_cycle_found(curNode, graphNodeArray);
 
-    for (int i = 0; i < curNode; i++) {
-        printf("%s\nDependencies ", graphNodeArray[i]->element);
-        for (int j = 0; graphNodeArray[i]->children[j] != NULL; j++) {
-            printf("%s", graphNodeArray[i]->children[j]->element);
-        }
-        printf("\n");
-
-    }
     if (isCycleFound) {
-        printf("Dependency found. Terminating.");
+        printf("Cyclic dependency found. Terminating.");
         exit(EXIT_FAILURE);
     }
 
 
-    GraphNode *root = graphNodeArray[0];
+    graph_node *root = graphNodeArray[0];
     int i = 0;
 
     while (root != NULL) {
