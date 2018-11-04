@@ -22,4 +22,9 @@
 #include "../target_executor/traversal.h"
 #endif //INC_537MAKE_TRAVERSAL_H
 
+#ifndef INC_537MAKE_CONSTANTS_H
+#define INC_537MAKE_CONSTANTS_H
+#include "../utils/validator.h"
+#endif //INC_537MAKE_CONSTANTS_H
+
 void reader();

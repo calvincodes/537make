@@ -7,51 +7,8 @@
 #include <string.h>
 #include <ctype.h>
 #include "reader.h"
+#include "../utils/validator.h"
 
-void validateTarget(char *line, unsigned int size, int lineNo) {
-    if (size == 0) {
-        fprintf(stderr, "%d Invalid line : %s", lineNo, line);
-        exit(EXIT_FAILURE);
-    }
-    if (line[0] == ' ') {
-        fprintf(stderr, "%d Invalid line : %s", lineNo, line);
-        exit(EXIT_FAILURE);
-    }
-    int countColon = 0;
-    for (int i = 0; i < size; i++) {
-        if (line[i] == ':')
-            countColon++;
-    }
-    if (countColon != 1) {
-        fprintf(stderr, "%d Invalid line : %s", lineNo, line);
-        exit(EXIT_FAILURE);
-    }
-}
-
-char *stripWhiteSpace(char *str) {
-    char *newStr = malloc(MAX_SIZE * sizeof(char));
-    int i = 0;
-    while (*str != '\0') {
-        if (*str != ' ') {
-            *(newStr + i++) = *str;
-        }
-        str++;
-
-    }
-    return newStr;
-}
-
-void validateCommands(char *line, unsigned int size, int lineNo) {
-    if (size == 0) {
-        fprintf(stderr, "%d Invalid line : %s", lineNo, line);
-        exit(EXIT_FAILURE);
-    }
-    int countTab = 0;
-    for (int i = 0; i < size; i++) {
-        if (line[i] == '\t')
-            countTab++;
-    }
-}
 
 void reader() {
     FILE *file_pointer;
@@ -66,10 +23,10 @@ void reader() {
     graph_node *graphNodeArray[MAX_SIZE];
 
     // Reading Makefile
-    file_pointer = fopen("testmake", "r");
+    file_pointer = fopen("Makefile", "r");
     if (!file_pointer) {
         // In case readfile is not present. Trying reading Makefile
-        file_pointer = fopen("akefile", "r");
+        file_pointer = fopen("makefile", "r");
         // If this also fails then throw error
         if (!file_pointer) {
             fprintf(stderr, "Could not find makefile or Makefile");
@@ -107,8 +64,12 @@ void reader() {
             validateCommands(line, index, lineNo);
 
             token = strtok(line, "\t");
+            if(!token){
+                fprintf(stderr, "\n%d Invalid line : %s\n", lineNo, line);
+                exit(EXIT_FAILURE);
+            }
             if (node == NULL) {
-                fprintf(stderr, "Commands before target. Don't know what to do. exiting!!!");
+                fprintf(stderr, "\n%d Invalid line : %s\n", lineNo, line);
                 exit(EXIT_FAILURE);
             } else {
                 if (!node->commands) {

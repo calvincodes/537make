@@ -3,8 +3,8 @@ WARNING_FLAGS = -Wall -Wextra
 EXE = 537make
 SCAN_BUILD_DIR = scan-build-out
 
-all: driver.o linked_list.o graph.o constants.o traversal.o reader.o command_executor.o
-	$(CC) -o $(EXE) driver.o linked_list.o graph.o constants.o traversal.o reader.o command_executor.o
+all: driver.o linked_list.o graph.o constants.o traversal.o reader.o command_executor.o validator.o
+	$(CC) -o $(EXE) driver.o linked_list.o graph.o constants.o traversal.o reader.o command_executor.o validator.o
 
 clean:
 	rm -f $(EXE) *.o
@@ -30,6 +30,9 @@ traversal.o: target_executor/traversal.c target_executor/traversal.h entities/li
 
 command_executor.o: target_executor/command_executor.c target_executor/command_executor.h target_executor/traversal.h utils/constants.h entities/graph.h
 	$(CC) $(WARNING_FLAGS) -c target_executor/command_executor.c
+
+validator.o: utils/validator.c utils/validator.h utils/constants.h
+	$(CC) $(WARNING_FLAGS) -c utils/validator.c
 
 #
 # Run the Clang Static Analyzer
