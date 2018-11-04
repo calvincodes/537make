@@ -8,16 +8,6 @@
 #include "linked_list.h"
 #include "../utils/constants.h"
 
-int main_1() {
-    linked_list_node* head = createLLNode("arpit");
-    appendToLL(head, "jain");
-    appendToLL(head, "uwm");
-    appendToLL(head, "intern");
-    appendToLL(head, "lagwa");
-    appendToLL(head, "do");
-    printf("end");
-}
-
 linked_list_node *createLLNode(char *element) {
 
     linked_list_node* llNode = (linked_list_node *) malloc(sizeof(linked_list_node));
@@ -27,7 +17,7 @@ linked_list_node *createLLNode(char *element) {
         exit(EXIT_FAILURE);
     }
 
-    llNode->element = malloc(MAX_SIZE * sizeof(char*));
+    llNode->element = malloc(MAX_SIZE * sizeof(char));
     strcpy(llNode->element, element);
     llNode->next = NULL;
     return llNode;
@@ -37,6 +27,7 @@ void appendToLL(linked_list_node *node, char *element) {
 
     if (node == NULL) {
         fprintf(stderr, "Null node passed to appendToLL function");
+        exit(EXIT_FAILURE);
     }
 
     linked_list_node* newNode = createLLNode(element);
@@ -50,6 +41,3 @@ void appendToLL(linked_list_node *node, char *element) {
     newNode->next = NULL;
 }
 
-linked_list_node *getElement(linked_list_node *node, int index) {
-    // TODO: Implement if required
-}
