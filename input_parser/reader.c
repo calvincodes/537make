@@ -150,6 +150,7 @@ void reader(struct_input unprocessedInput) {
         for(unsigned int i = 0;i<curNode;i++){
             if(strcmp(graphNodeArray[i]->element, unprocessedInput.targets_to_build[curTarget]) == 0){
                 traverseAndExecute(graphNodeArray[i]);
+                break;
             }
         }
     }
