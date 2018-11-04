@@ -5,8 +5,70 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
+#include <ctype.h>
+#include "GraphNode.h"
+
+#ifndef INC_537MAKE_READER_H
+#define INC_537MAKE_READER_H
+
 #include "reader.h"
+
+#endif //INC_537MAKE_READER_H
+
+#ifndef INC_537MAKE_CONSTANTS_H
+#define INC_537MAKE_CONSTANTS_H
+#include "constants.h"
+#endif //INC_537MAKE_CONSTANTS_H
+
+
+void validateTarget(char *line, unsigned int size, int lineNo) {
+    if (size == 0) {
+        fprintf(stderr, "%d Invalid line : %s", lineNo, line);
+        exit(EXIT_FAILURE);
+    }
+    if (line[0] == ' ') {
+        fprintf(stderr, "%d Invalid line : %s", lineNo, line);
+        exit(EXIT_FAILURE);
+    }
+    int countColon = 0;
+    for (int i = 0; i < size; i++) {
+//        if(countColon == 0  && line[i] == ' '){
+//            fprintf(stderr, "%d Invalid line : %s",lineNo, line);
+//            exit(EXIT_FAILURE);
+//        }
+        if (line[i] == ':')
+            countColon++;
+    }
+    if (countColon != 1) {
+        fprintf(stderr, "%d Invalid line : %s", lineNo, line);
+        exit(EXIT_FAILURE);
+    }
+}
+
+char *stripWhiteSpace(char *str) {
+    char *newStr = malloc(MAX_SIZE * sizeof(char));
+    int i = 0;
+    while (*str != '\0') {
+        if (*str != ' ') {
+            *(newStr + i++) = *str;
+        }
+        str++;
+
+    }
+    return newStr;
+}
+
+void validateCommands(char *line, unsigned int size, int lineNo) {
+    if (size == 0) {
+        fprintf(stderr, "%d Invalid line : %s", lineNo, line);
+        exit(EXIT_FAILURE);
+    }
+    int countTab = 0;
+    for (int i = 0; i < size; i++) {
+        if (line[i] == '\t')
+            countTab++;
+    }
+}
 
 void reader() {
     FILE *file_pointer;
@@ -39,8 +101,6 @@ void reader() {
     int c;
     do {
         lineNo++;
-
-
         // Concatente everything line;
         do {
             c = fgetc(file_pointer);
@@ -61,6 +121,7 @@ void reader() {
 
         if (line[0] == '\t') {
             // Commands
+            validateCommands(line, index, lineNo);
 
             token = strtok(line, "\t");
             if (node == NULL) {
@@ -81,6 +142,7 @@ void reader() {
             line = (char *) malloc(MAX_SIZE * sizeof(char));
             continue;
         } else {
+            validateTarget(line, index, lineNo);
             // Now check if it's a target or not
 
             token = strtok(line, ":");
@@ -91,13 +153,15 @@ void reader() {
             }
 
             char *targetName = malloc(sizeof(char) * MAX_SIZE);
+
             strcpy(targetName, token);
+            targetName = stripWhiteSpace(targetName);
 
             token = strtok(NULL, " ");
-            if (!token) {
-                fprintf(stderr, "%d: Invalid line : %s\n", lineNo, line);
-                exit(EXIT_FAILURE);
-            }
+//            if (!token) {
+//                fprintf(stderr, "%d: Invalid line : %s\n", lineNo, line);
+//                exit(EXIT_FAILURE);
+//            }
             // New Target found. Create a new graph node.
 
             node = createGraphNode(targetName, NULL, NULL);
@@ -117,10 +181,10 @@ void reader() {
 
                 token = strtok(NULL, " ");
             }
-            if (total_dep == 0) {
-                fprintf(stderr, "%d: Invalid line : %s\n", lineNo, line);
-                exit(EXIT_FAILURE);
-            }
+//            if (total_dep == 0) {
+//                fprintf(stderr, "%d: Invalid line : %s\n", lineNo, line);
+//                exit(EXIT_FAILURE);
+//            }
         }
         index = 0;
         free(line);
@@ -131,13 +195,23 @@ void reader() {
 
     createConnections(graphNodeArray, curNode);
     int isCycleFound = is_cycle_found(curNode, graphNodeArray);
+
+//    printf("Dependency found %d", isCycleFound);
+    for (int i = 0; i < curNode; i++) {
+        printf("%s\nDependencies ", graphNodeArray[i]->element);
+        for (int j = 0; graphNodeArray[i]->children[j] != NULL; j++) {
+            printf("%s", graphNodeArray[i]->children[j]->element);
+        }
+        printf("\n");
+
+    }
     if (isCycleFound) {
         printf("Dependency found. Terminating.");
         exit(EXIT_FAILURE);
     }
 
 
-    GraphNode* root = graphNodeArray[0];
+    GraphNode *root = graphNodeArray[0];
     int i = 0;
 
     while (root != NULL) {

@@ -80,11 +80,13 @@ GraphNode* createConnections(GraphNode* graphArray[], unsigned int size){
             root = graphArray[i];
         }
         LLNode *llNode = graphArray[i]->dependencies;
+        int currChildCount = 0;
         while(llNode){
-            int currChildCount = 0;
+
             for(int j =0;j<size;j++){
                 if(strcmp(llNode->element, graphArray[j]->element) == 0){
                     graphArray[i]->children[currChildCount++] = graphArray[j];
+                    break;
                 }
             }
             llNode = llNode->next;
