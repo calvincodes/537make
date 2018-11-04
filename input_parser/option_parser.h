@@ -13,3 +13,5 @@
 #endif
 
 struct_input parse_and_get_unprocessed_input(int argc, char **argv);
+
+struct_input get_default_input_arg();

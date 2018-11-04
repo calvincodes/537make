@@ -12,14 +12,16 @@
 struct_input parse_and_get_unprocessed_input(int argc, char **argv) {
 
     int optionAsInt;
+    bool is_file_passed = false;
 
-    struct_input unprocessedInputArg;
+    struct_input unprocessedInputArg = get_default_input_arg();
 
     while ((optionAsInt = getopt(argc, argv, "f:")) != -1) {
 
         switch (optionAsInt) {
 
             case 'f':
+                is_file_passed = true;
                 unprocessedInputArg.make_file_name = optarg;
                 break;
 
@@ -34,11 +36,28 @@ struct_input parse_and_get_unprocessed_input(int argc, char **argv) {
     // now, for this case, the count of arguments passed > the count of (option + option argument) read.
     // So, putting the same as a if clause to detect this anomaly and report error.
     if (argc > optind) {
-        for (int i = 0; i < argc-1; ++i) {
-            fprintf(stderr, "Redundant argument %s passed\n", argv[argc-1]);
+        int i;
+        if (is_file_passed) {
+            i = 3;
+        } else {
+            i = 1;
         }
-        exit(EXIT_FAILURE);
+
+        int j =0;
+        for (; i < argc; ++i) {
+            unprocessedInputArg.targets_to_build[j] = argv[i];
+            j++;
+        }
     }
 
     return unprocessedInputArg;
+}
+
+struct_input get_default_input_arg() {
+
+    struct_input defaultInputArg;
+    defaultInputArg.make_file_name = NULL;
+    defaultInputArg.targets_to_build[0] = "all";
+
+    return defaultInputArg;
 }
