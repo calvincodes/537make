@@ -17,9 +17,6 @@
 
 bool isLHSLessThanRHS(struct timespec lhs, struct timespec rhs) {
 
-//    printf("LHS lmd: %lld.%.9ld\n", (long long)lhs.tv_sec, lhs.tv_nsec);
-//    printf("RHS lmd: %lld.%.9ld\n", (long long)rhs.tv_sec, rhs.tv_nsec);
-
     if (lhs.tv_sec == rhs.tv_sec)
         return lhs.tv_nsec < rhs.tv_nsec;
     else
