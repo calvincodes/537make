@@ -95,18 +95,61 @@ void executeNodeCommands(graph_node* root) {
 
             else if (pid == 0) { // Child process
 
+                bool inputRedirection = false;
+                bool outputRedirection = false;
+                char* file_name;
+
                 char copiedCmd[MAX_SIZE];
                 strncpy(copiedCmd, temphead->element, MAX_SIZE);
                 char *argv[MAX_SIZE];
                 int i = 0;
                 char *split = strtok(copiedCmd, " ");
                 while (split) {
-                    argv[i] = split;
-                    i++;
-                    split = strtok(NULL, " ");
+
+                    if (strcmp(split, "<") == 0) {
+                        inputRedirection = true;
+                        file_name = strtok(NULL, " ");
+                        i++;
+                        break;
+                    } else if (strcmp(split, ">") == 0) {
+                        outputRedirection = true;
+                        file_name = strtok(NULL, " ");
+                        i++;
+                        break;
+                    } else {
+                        argv[i] = split;
+                        i++;
+                        split = strtok(NULL, " ");
+                    }
                 }
                 argv[i] = NULL;
                 char *cmd = argv[0];
+
+                if (inputRedirection && outputRedirection) {
+                    // TODO confirm and throw error.
+                }
+
+                if (inputRedirection) {
+//                    close(STDIN_FILENO);
+                    int in = open(file_name, O_RDONLY);
+                    // replace standard input with input file
+
+                    dup2(in, STDIN_FILENO);
+                    // close unused file descriptors
+
+                    close(in);
+                }
+
+                if (outputRedirection) {
+//                    close(STDOUT_FILENO);
+                    int out = open(file_name, O_CREAT|O_WRONLY|O_TRUNC, S_IRWXU);
+                    // replace standard output with output file
+
+                    dup2(out, STDOUT_FILENO);
+                    // close unused file descriptors
+
+                    close(out);
+                }
 
                 execvp(cmd, argv);
                 // The exec() functions only return if an error has occurred.
