@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+<<<<<<< HEAD
 #include <ctype.h>
 #include "GraphNode.h"
 
@@ -69,6 +70,11 @@ void validateCommands(char *line, unsigned int size, int lineNo){
             countTab++;
     }
 }
+=======
+#include <unistd.h>
+#include "reader.h"
+
+>>>>>>> 1993e6ae6dccc6f11a88b438ca44a6613963121b
 void reader() {
     FILE *file_pointer;
     char *line = (char *) malloc(MAX_SIZE * sizeof(char));
@@ -194,6 +200,7 @@ void reader() {
 
     createConnections(graphNodeArray, curNode);
     int isCycleFound = is_cycle_found(curNode, graphNodeArray);
+
 //    printf("Dependency found %d", isCycleFound);
     for(int i = 0 ;i<curNode;i++){
         printf("%s\nDependencies ",graphNodeArray[i]->element);
@@ -201,6 +208,21 @@ void reader() {
             printf("%s",graphNodeArray[i]->children[j]->element);
         }
         printf("\n");
+
+    if (isCycleFound) {
+        printf("Dependency found. Terminating.");
+        exit(EXIT_FAILURE);
+    }
+
+
+    GraphNode* root = graphNodeArray[0];
+    int i = 0;
+
+    while (root != NULL) {
+//        printf("Trying to traverse: %s", root->element);
+        traverseAndExecute(root);
+        i++;
+        root = graphNodeArray[i];
     }
 
     if (fclose(file_pointer)) {
