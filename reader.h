@@ -7,11 +7,6 @@
 
 #endif //INC_537MAKE_READER_H
 
-#ifndef INC_537MAKE_READER_H
-#define INC_537MAKE_READER_H
-#include "reader.h"
-#endif //INC_537MAKE_READER_H
-
 #ifndef INC_537MAKE_CONSTANTS_H
 #define INC_537MAKE_CONSTANTS_H
 #include "constants.h"

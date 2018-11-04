@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include "reader.h"
 
 void reader() {
@@ -130,12 +131,17 @@ void reader() {
 
     createConnections(graphNodeArray, curNode);
     int isCycleFound = is_cycle_found(curNode, graphNodeArray);
-    printf("Dependency found %d", isCycleFound);
+    if (isCycleFound) {
+        printf("Dependency found. Terminating.");
+        exit(EXIT_FAILURE);
+    }
+
 
     GraphNode* root = graphNodeArray[0];
     int i = 0;
 
     while (root != NULL) {
+//        printf("Trying to traverse: %s", root->element);
         traverseAndExecute(root);
         i++;
         root = graphNodeArray[i];
