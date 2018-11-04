@@ -17,9 +17,6 @@
 
 bool isLHSLessThanRHS(struct timespec lhs, struct timespec rhs) {
 
-//    printf("LHS lmd: %lld.%.9ld\n", (long long)lhs.tv_sec, lhs.tv_nsec);
-//    printf("RHS lmd: %lld.%.9ld\n", (long long)rhs.tv_sec, rhs.tv_nsec);
-
     if (lhs.tv_sec == rhs.tv_sec)
         return lhs.tv_nsec < rhs.tv_nsec;
     else
@@ -95,18 +92,60 @@ void executeNodeCommands(graph_node* root) {
 
             else if (pid == 0) { // Child process
 
+                bool inputRedirection = false;
+                bool outputRedirection = false;
+                char* file_name_input_direction;
+                char* file_name_output_redirection;
+
                 char copiedCmd[MAX_SIZE];
                 strncpy(copiedCmd, temphead->element, MAX_SIZE);
                 char *argv[MAX_SIZE];
                 int i = 0;
                 char *split = strtok(copiedCmd, " ");
                 while (split) {
-                    argv[i] = split;
-                    i++;
-                    split = strtok(NULL, " ");
+
+                    if (strcmp(split, "<") == 0) {
+                        // If input redirection detected, read the file for input redirection.
+                        inputRedirection = true;
+                        file_name_input_direction = strtok(NULL, " ");
+                        split = strtok(NULL, " ");
+                        i++;
+                    } else if (strcmp(split, ">") == 0) {
+                        // If output redirection detected, read the file for output redirection.
+                        outputRedirection = true;
+                        file_name_output_redirection = strtok(NULL, " ");
+                        split = strtok(NULL, " ");
+                        i++;
+                    } else {
+                        argv[i] = split;
+                        i++;
+                        split = strtok(NULL, " ");
+                    }
                 }
                 argv[i] = NULL;
                 char *cmd = argv[0];
+
+                if (inputRedirection) {
+
+                    int in = open(file_name_input_direction, O_RDONLY);
+
+                    // Replacing standard input with input file
+                    dup2(in, STDIN_FILENO);
+
+                    // Closing unused file descriptors
+                    close(in);
+                }
+
+                if (outputRedirection) {
+
+                    int out = open(file_name_output_redirection, O_CREAT|O_WRONLY|O_TRUNC, S_IRWXU);
+
+                    // Replacing standard output with output file
+                    dup2(out, STDOUT_FILENO);
+
+                    // Closing unused file descriptors
+                    close(out);
+                }
 
                 execvp(cmd, argv);
                 // The exec() functions only return if an error has occurred.
