@@ -16,3 +16,5 @@
 #define INC_537MAKE_GRAPHNODE_H
 #include "GraphNode.h"
 #endif
+
+void traverseAndExecute(GraphNode* root);

@@ -37,30 +37,45 @@ bool isLHSLessThanRHS(struct timespec lhs, struct timespec rhs) {
 bool commandExecutionRequired(GraphNode* root) {
 
     if(root->dependencies != NULL) {
+//        printf("Trying to execute: %s", root->element);
 
         struct stat targetStat;
         FILE *targetPointer = fopen(root->element, "r");
-        fstat(fileno(targetPointer), &targetStat);
-        fclose(targetPointer);
-        struct timespec targetLmd = targetStat.st_mtim;
 
-        LLNode* dependencies = root->dependencies;
-        while(dependencies) {
-            printf("Dependency: %s\n", dependencies->element);
-            struct stat dependencyStat;
-            FILE *dependencyPointer = fopen(dependencies->element, "r");
-            fstat(fileno(dependencyPointer), &dependencyStat);
-            fclose(dependencyPointer);
-            struct timespec dependencyLmd = dependencyStat.st_mtim;
+        if (!targetPointer) {
+            // Target file does not exists
+            return true;
+        } else {
 
-            if(isLHSLessThanRHS(targetLmd, dependencyLmd)) {
-                return true;
+            fstat(fileno(targetPointer), &targetStat);
+            fclose(targetPointer);
+            struct timespec targetLmd = targetStat.st_mtim;
+
+            LLNode* dependencies = root->dependencies;
+            while(dependencies) {
+                printf("Dependency: %s\n", dependencies->element);
+                struct stat dependencyStat;
+                FILE *dependencyPointer = fopen(dependencies->element, "r");
+
+                if (!dependencyPointer) {
+                    // Dependency file does not exists - THROW ERROR
+                    printf("Dependency file '%s' does NOT exists", dependencies->element);
+                    exit(EXIT_FAILURE);
+                } else {
+                    fstat(fileno(dependencyPointer), &dependencyStat);
+                    fclose(dependencyPointer);
+                    struct timespec dependencyLmd = dependencyStat.st_mtim;
+
+                    if(isLHSLessThanRHS(targetLmd, dependencyLmd)) {
+                        return true;
+                    }
+                }
+
+                dependencies = dependencies->next;
             }
 
-            dependencies = dependencies->next;
+            return false;
         }
-
-        return false;
     }
 
     return true;
@@ -75,7 +90,7 @@ void executeNodeCommands(GraphNode* root) {
             pid_t pid = fork();
             if (pid == -1) { // Error, failed to fork()
                 printf("Failed to fork(). Terminating at once.");
-                _exit(EXIT_FAILURE);
+                exit(EXIT_FAILURE);
             }
 
             else if (pid > 0) { // Parent process
@@ -83,7 +98,7 @@ void executeNodeCommands(GraphNode* root) {
                 waitpid(pid, &status, 0);
                 if (status != EXIT_SUCCESS) {
                     printf("Failed to execute command. Error status %d", status);
-                    _exit(EXIT_FAILURE);
+                    exit(EXIT_FAILURE);
                 }
                 temphead = temphead->next;
             }
@@ -107,7 +122,7 @@ void executeNodeCommands(GraphNode* root) {
                 // The exec() functions only return if an error has occurred.
                 // The return value is -1, and errno is set to indicate the error.
 
-                _exit(EXIT_FAILURE);
+                exit(EXIT_FAILURE);
             }
 
             else { // IMPOSSIBLE ZONE
@@ -120,7 +135,7 @@ void executeNodeCommands(GraphNode* root) {
 
 void traverseAndExecute(GraphNode* root) {
 
-    if (root->children == NULL) {
+    if (root->children[0] == NULL) {
         executeNodeCommands(root);
         return;
     }
