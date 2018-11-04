@@ -17,7 +17,7 @@ linked_list_node *createLLNode(char *element) {
         exit(EXIT_FAILURE);
     }
 
-    llNode->element = malloc(MAX_SIZE * sizeof(char*));
+    llNode->element = malloc(MAX_SIZE * sizeof(char));
     strcpy(llNode->element, element);
     llNode->next = NULL;
     return llNode;
@@ -27,6 +27,7 @@ void appendToLL(linked_list_node *node, char *element) {
 
     if (node == NULL) {
         fprintf(stderr, "Null node passed to appendToLL function");
+        exit(EXIT_FAILURE);
     }
 
     linked_list_node* newNode = createLLNode(element);
