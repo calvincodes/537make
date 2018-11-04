@@ -45,7 +45,7 @@ void validateCommands(char *line, unsigned int size, int lineNo) {
         exit(EXIT_FAILURE);
     }
     int countTab = 0;
-    for (int i = 0; i < size; i++) {
+    for (unsigned int i = 0; i < size; i++) {
         if (line[i] == '\t')
             countTab++;
     }
