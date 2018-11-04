@@ -6,19 +6,19 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
-#include "GraphNode.h"
+#include "graph.h"
 
 int main_() {
 
-    LLNode* all_commands = createLLNode(
+    linked_list_node* all_commands = createLLNode(
             "gcc -o prodcomm main.o reader.o munch1.o munch2.o writer.o constants.o queue.o struct_args.o -lpthread");
-    GraphNode* all = createGraphNode("all", NULL, all_commands);
+    graph_node* all = createGraphNode("all", NULL, all_commands);
 
-    LLNode* main_o_commands = createLLNode("gcc -Wall -Wextra -c main.c");
-    GraphNode* main_o = createGraphNode("main_o", NULL, main_o_commands);
+    linked_list_node* main_o_commands = createLLNode("gcc -Wall -Wextra -c main.c");
+    graph_node* main_o = createGraphNode("main_o", NULL, main_o_commands);
 
-    LLNode* queue_o_commands = createLLNode("gcc -Wall -Wextra -c queue.c");
-    GraphNode* queue_o = createGraphNode("queue_o", NULL, queue_o_commands);
+    linked_list_node* queue_o_commands = createLLNode("gcc -Wall -Wextra -c queue.c");
+    graph_node* queue_o = createGraphNode("queue_o", NULL, queue_o_commands);
 
     all->children[0] = main_o;
     all->children[1] = queue_o;
@@ -27,14 +27,14 @@ int main_() {
 
     printf("end");
 
-//    GraphNode* reader_o = (GraphNode *) malloc(sizeof(GraphNode));
-//    GraphNode* munch1_o = (GraphNode *) malloc(sizeof(GraphNode));
-//    GraphNode* munch2_o = (GraphNode *) malloc(sizeof(GraphNode));
-//    GraphNode* writer_o = (GraphNode *) malloc(sizeof(GraphNode));
-//    GraphNode* constants_o = (GraphNode *) malloc(sizeof(GraphNode));
-//    GraphNode* struct_args_o = (GraphNode *) malloc(sizeof(GraphNode));
+//    graph_node* reader_o = (graph_node *) malloc(sizeof(graph_node));
+//    graph_node* munch1_o = (graph_node *) malloc(sizeof(graph_node));
+//    graph_node* munch2_o = (graph_node *) malloc(sizeof(graph_node));
+//    graph_node* writer_o = (graph_node *) malloc(sizeof(graph_node));
+//    graph_node* constants_o = (graph_node *) malloc(sizeof(graph_node));
+//    graph_node* struct_args_o = (graph_node *) malloc(sizeof(graph_node));
 
-//    LLNode* all_dependencies = createLLNode("main.o");
+//    linked_list_node* all_dependencies = createLLNode("main.o");
 //    appendToLL(all_dependencies, "reader.o");
 //    appendToLL(all_dependencies, "munch1.o");
 //    appendToLL(all_dependencies, "munch2.o");
@@ -44,7 +44,7 @@ int main_() {
 //    appendToLL(all_dependencies, "struct_args.o");
 
 
-//    LLNode* main_o_dependencies = createLLNode("main.c");
+//    linked_list_node* main_o_dependencies = createLLNode("main.c");
 //    appendToLL(main_o_dependencies, "reader.h");
 //    appendToLL(main_o_dependencies, "munch1.h");
 //    appendToLL(main_o_dependencies, "munch2.h");
@@ -54,9 +54,9 @@ int main_() {
 //    appendToLL(main_o_dependencies, "constants.h");
 }
 
-GraphNode* createGraphNode(char *element, LLNode* dependencies, LLNode* commands) {
+graph_node* createGraphNode(char *element, linked_list_node* dependencies, linked_list_node* commands) {
 
-    GraphNode* graphNode = (GraphNode *) malloc(sizeof(GraphNode));
+    graph_node* graphNode = (graph_node *) malloc(sizeof(graph_node));
 
     if(!graphNode){
         fprintf(stderr, "Could not allocate memory for LinkedList data");
@@ -65,12 +65,12 @@ GraphNode* createGraphNode(char *element, LLNode* dependencies, LLNode* commands
     graphNode->element = element;
     graphNode->dependencies = dependencies;
     graphNode->commands = commands;
-    graphNode->children = (GraphNode**) malloc(MAX_SIZE * sizeof(graphNode));
+    graphNode->children = (graph_node**) malloc(MAX_SIZE * sizeof(graphNode));
     return graphNode;
 }
 
-GraphNode* createConnections(GraphNode* graphArray[], unsigned int size){
-    GraphNode *root = NULL;
+graph_node* createConnections(graph_node* graphArray[], unsigned int size){
+    graph_node *root = NULL;
 
     for(int i = 0;i<size;i++){
         graphArray[i]->nodeNo = i;
@@ -79,7 +79,7 @@ GraphNode* createConnections(GraphNode* graphArray[], unsigned int size){
         if(!root){
             root = graphArray[i];
         }
-        LLNode *llNode = graphArray[i]->dependencies;
+        linked_list_node *llNode = graphArray[i]->dependencies;
         int currChildCount = 0;
         while(llNode){
 
@@ -95,7 +95,7 @@ GraphNode* createConnections(GraphNode* graphArray[], unsigned int size){
     return root;
 }
 
-int cyclic_util(int nodeNo, int visited[], int stack[], GraphNode *graphNodeArray[], GraphNode* node ){
+int cyclic_util(int nodeNo, int visited[], int stack[], graph_node *graphNodeArray[], graph_node* node ){
     if(!visited[nodeNo]){
         visited[nodeNo] = 1;
         stack[nodeNo] = 1;
@@ -110,7 +110,7 @@ int cyclic_util(int nodeNo, int visited[], int stack[], GraphNode *graphNodeArra
     return 0;
 }
 
-int is_cycle_found(unsigned int graphSize, GraphNode *graphNodeArray[]){
+int is_cycle_found(unsigned int graphSize, graph_node *graphNodeArray[]){
 
     int visited[graphSize];
     int stack[graphSize];

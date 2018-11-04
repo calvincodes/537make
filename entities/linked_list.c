@@ -5,11 +5,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "LinkedList.h"
-#include "constants.h"
+#include "linked_list.h"
+#include "../utils/constants.h"
 
 int main_1() {
-    LLNode* head = createLLNode("arpit");
+    linked_list_node* head = createLLNode("arpit");
     appendToLL(head, "jain");
     appendToLL(head, "uwm");
     appendToLL(head, "intern");
@@ -18,9 +18,9 @@ int main_1() {
     printf("end");
 }
 
-LLNode *createLLNode(char *element) {
+linked_list_node *createLLNode(char *element) {
 
-    LLNode* llNode = (LLNode *) malloc(sizeof(LLNode));
+    linked_list_node* llNode = (linked_list_node *) malloc(sizeof(linked_list_node));
 
     if(!llNode){
         fprintf(stderr, "Could not allocate memory for LinkedList data");
@@ -33,15 +33,15 @@ LLNode *createLLNode(char *element) {
     return llNode;
 }
 
-void appendToLL(LLNode *node, char *element) {
+void appendToLL(linked_list_node *node, char *element) {
 
     if (node == NULL) {
         fprintf(stderr, "Null node passed to appendToLL function");
     }
 
-    LLNode* newNode = createLLNode(element);
+    linked_list_node* newNode = createLLNode(element);
 
-    LLNode* tempHead = node;
+    linked_list_node* tempHead = node;
     while (tempHead -> next != NULL) {
         tempHead = tempHead->next;
     }
@@ -50,6 +50,6 @@ void appendToLL(LLNode *node, char *element) {
     newNode->next = NULL;
 }
 
-LLNode *getElement(LLNode *node, int index) {
+linked_list_node *getElement(linked_list_node *node, int index) {
     // TODO: Implement if required
 }

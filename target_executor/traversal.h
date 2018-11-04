@@ -9,12 +9,17 @@
 
 #ifndef PROJECT_NODE_H
 #define PROJECT_NODE_H
-#include "LinkedList.h"
+#include "../entities/linked_list.h"
 #endif
 
 #ifndef INC_537MAKE_GRAPHNODE_H
 #define INC_537MAKE_GRAPHNODE_H
-#include "GraphNode.h"
+#include "../entities/graph.h"
 #endif
 
-void traverseAndExecute(GraphNode* root);
+#ifndef INC_537MAKE_COMMAND_EXECUTOR_H
+#define INC_537MAKE_COMMAND_EXECUTOR_H
+#include "command_executor.h"
+#endif
+
+void traverseAndExecute(graph_node* root);
