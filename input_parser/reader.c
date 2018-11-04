@@ -144,25 +144,18 @@ void reader(struct_input unprocessedInput) {
         exit(EXIT_FAILURE);
     }
 
-    int targetSize = sizeof(unprocessedInput.targets_to_build)/ sizeof(char);
-
-    for(int curTarget = 0; curTarget < targetSize; curTarget++){
+    for(unsigned int x = 0; x < MAX_SIZE; x++) {
+        if(unprocessedInput.targets_to_build[x] == NULL){
+            break;
+        }
         for(unsigned int i = 0;i<curNode;i++){
-            if(strcmp(graphNodeArray[i]->element, unprocessedInput.targets_to_build[curTarget]) == 0){
+            if(strcmp(graphNodeArray[i]->element, unprocessedInput.targets_to_build[x]) == 0){
                 traverseAndExecute(graphNodeArray[i]);
                 break;
             }
         }
     }
 
-//    graph_node *root = graphNodeArray[0];
-//    int i = 0;
-//
-//    while (root != NULL) {
-//        traverseAndExecute(root);
-//        i++;
-//        root = graphNodeArray[i];
-//    }
 
     if (fclose(file_pointer)) {
         fprintf(stderr, "Failed to close makefile or Makefile");

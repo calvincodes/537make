@@ -48,6 +48,7 @@ struct_input parse_and_get_unprocessed_input(int argc, char **argv) {
             unprocessedInputArg.targets_to_build[j] = argv[i];
             j++;
         }
+        unprocessedInputArg.targets_to_build[j] = NULL;
     }
 
     return unprocessedInputArg;

@@ -12,6 +12,6 @@ struct_input get_default_input_arg() {
     defaultInputArg.make_file_name = NULL;
     defaultInputArg.targets_to_build = (char **) malloc(MAX_SIZE * sizeof(char));
     defaultInputArg.targets_to_build[0] = "all";
-
+    defaultInputArg.targets_to_build[1] = NULL;
     return defaultInputArg;
 }
