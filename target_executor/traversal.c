@@ -138,7 +138,7 @@ void traverseAndExecute(graph_node* root) {
         return;
     }
 
-    for (int i = 0; i < MAX_SIZE; ++i) {
+    for (unsigned int i = 0; i < MAX_SIZE; ++i) {
         if (root->children[i] == NULL) {
             break;
         }

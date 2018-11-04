@@ -77,7 +77,6 @@ void executeNodeCommands(graph_node* root) {
     if(commandExecutionRequired(root)) {
         linked_list_node* temphead = root->commands;
         while (temphead != NULL) {
-            pid_t parent = getpid();
             pid_t pid = fork();
             if (pid == -1) { // Error, failed to fork()
                 printf("Failed to fork(). Terminating at once.");

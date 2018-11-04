@@ -16,7 +16,7 @@ void validateTarget(char *line, unsigned int size, int lineNo) {
         exit(EXIT_FAILURE);
     }
     int countColon = 0;
-    for (int i = 0; i < size; i++) {
+    for (unsigned int i = 0; i < size; i++) {
         if (line[i] == ':')
             countColon++;
     }

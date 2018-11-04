@@ -16,10 +16,9 @@ void reader() {
 
     if (line == NULL) {
         fprintf(stderr, "Unable to allocate memory for reader input buffer");
-        exit(1);
+        exit(EXIT_FAILURE);
     }
 
-    size_t len = 0;
     graph_node *graphNodeArray[MAX_SIZE];
 
     // Reading Makefile

@@ -26,10 +26,10 @@ graph_node* createGraphNode(char *element, linked_list_node* dependencies, linke
 graph_node* createConnections(graph_node* graphArray[], unsigned int size){
     graph_node *root = NULL;
 
-    for(int i = 0;i<size;i++){
+    for(unsigned int i = 0;i<size;i++){
         graphArray[i]->nodeNo = i;
     }
-    for(int i = 0;i<size;i++){
+    for(unsigned int i = 0;i<size;i++){
         if(!root){
             root = graphArray[i];
         }
@@ -37,7 +37,7 @@ graph_node* createConnections(graph_node* graphArray[], unsigned int size){
         int currChildCount = 0;
         while(llNode){
 
-            for(int j =0;j<size;j++){
+            for(unsigned int j =0;j<size;j++){
                 if(strcmp(llNode->element, graphArray[j]->element) == 0){
                     graphArray[i]->children[currChildCount++] = graphArray[j];
                     break;
@@ -54,7 +54,7 @@ int cyclic_util(int nodeNo, int visited[], int stack[], graph_node *graphNodeArr
         visited[nodeNo] = 1;
         stack[nodeNo] = 1;
     }
-    for(int i=0;i<MAX_SIZE && node->children[i] != NULL;i++){
+    for(unsigned int i=0;i<MAX_SIZE && node->children[i] != NULL;i++){
         if (!visited[node->children[i]->nodeNo] && cyclic_util(node->children[i]->nodeNo, visited, stack, graphNodeArray, graphNodeArray[nodeNo]->children[i]))
             return 1;
         else if (stack[node->children[i]->nodeNo])
@@ -69,12 +69,12 @@ int is_cycle_found(unsigned int graphSize, graph_node *graphNodeArray[]){
     int visited[graphSize];
     int stack[graphSize];
 
-    for(int i=0;i<graphSize;i++ ){
+    for(unsigned int i=0;i<graphSize;i++ ){
         visited[i] = 0;
         stack[i] = 0;
     }
 
-    for(int i=0;i<graphSize;i++){
+    for(unsigned int i=0;i<graphSize;i++){
         if(cyclic_util(graphNodeArray[i]->nodeNo, visited, stack, graphNodeArray, graphNodeArray[i])){
             return 1;
         }
