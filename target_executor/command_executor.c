@@ -97,7 +97,8 @@ void executeNodeCommands(graph_node* root) {
 
                 bool inputRedirection = false;
                 bool outputRedirection = false;
-                char* file_name;
+                char* file_name_input_direction;
+                char* file_name_output_redirection;
 
                 char copiedCmd[MAX_SIZE];
                 strncpy(copiedCmd, temphead->element, MAX_SIZE);
@@ -107,15 +108,17 @@ void executeNodeCommands(graph_node* root) {
                 while (split) {
 
                     if (strcmp(split, "<") == 0) {
+                        // If input redirection detected, read the file for input redirection.
                         inputRedirection = true;
-                        file_name = strtok(NULL, " ");
+                        file_name_input_direction = strtok(NULL, " ");
+                        split = strtok(NULL, " ");
                         i++;
-                        break;
                     } else if (strcmp(split, ">") == 0) {
+                        // If output redirection detected, read the file for output redirection.
                         outputRedirection = true;
-                        file_name = strtok(NULL, " ");
+                        file_name_output_redirection = strtok(NULL, " ");
+                        split = strtok(NULL, " ");
                         i++;
-                        break;
                     } else {
                         argv[i] = split;
                         i++;
@@ -125,29 +128,25 @@ void executeNodeCommands(graph_node* root) {
                 argv[i] = NULL;
                 char *cmd = argv[0];
 
-                if (inputRedirection && outputRedirection) {
-                    // TODO confirm and throw error.
-                }
-
                 if (inputRedirection) {
-//                    close(STDIN_FILENO);
-                    int in = open(file_name, O_RDONLY);
-                    // replace standard input with input file
 
+                    int in = open(file_name_input_direction, O_RDONLY);
+
+                    // Replacing standard input with input file
                     dup2(in, STDIN_FILENO);
-                    // close unused file descriptors
 
+                    // Closing unused file descriptors
                     close(in);
                 }
 
                 if (outputRedirection) {
-//                    close(STDOUT_FILENO);
-                    int out = open(file_name, O_CREAT|O_WRONLY|O_TRUNC, S_IRWXU);
-                    // replace standard output with output file
 
+                    int out = open(file_name_output_redirection, O_CREAT|O_WRONLY|O_TRUNC, S_IRWXU);
+
+                    // Replacing standard output with output file
                     dup2(out, STDOUT_FILENO);
-                    // close unused file descriptors
 
+                    // Closing unused file descriptors
                     close(out);
                 }
 
