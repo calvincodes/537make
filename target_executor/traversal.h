@@ -2,6 +2,8 @@
 // Created by Arpit Jain on 11/1/18.
 //
 
+#include <stdbool.h>
+
 #ifndef INC_537MAKE_TRAVERSAL_H
 #define INC_537MAKE_TRAVERSAL_H
 
@@ -22,4 +24,4 @@
 #include "command_executor.h"
 #endif
 
-void traverseAndExecute(graph_node* root);
+bool traverseAndExecute(graph_node* root);
