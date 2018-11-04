@@ -196,7 +196,6 @@ void reader() {
     createConnections(graphNodeArray, curNode);
     int isCycleFound = is_cycle_found(curNode, graphNodeArray);
 
-//    printf("Dependency found %d", isCycleFound);
     for (int i = 0; i < curNode; i++) {
         printf("%s\nDependencies ", graphNodeArray[i]->element);
         for (int j = 0; graphNodeArray[i]->children[j] != NULL; j++) {
@@ -215,7 +214,6 @@ void reader() {
     int i = 0;
 
     while (root != NULL) {
-//        printf("Trying to traverse: %s", root->element);
         traverseAndExecute(root);
         i++;
         root = graphNodeArray[i];

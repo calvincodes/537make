@@ -37,7 +37,6 @@ bool isLHSLessThanRHS(struct timespec lhs, struct timespec rhs) {
 bool commandExecutionRequired(GraphNode* root) {
 
     if(root->dependencies != NULL) {
-//        printf("Trying to execute: %s", root->element);
 
         struct stat targetStat;
         FILE *targetPointer = fopen(root->element, "r");
