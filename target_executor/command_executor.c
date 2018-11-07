@@ -36,6 +36,7 @@ void checkAllDependenciesExists(graph_node* root) {
                     dependencies->element, root->element);
             exit(EXIT_FAILURE);
         }
+        fclose(dependencyPointer);
 
         dependencies = dependencies->next;
     }
@@ -50,7 +51,7 @@ bool commandExecutionRequired(graph_node* root) {
 
         if (!targetPointer) {
             // Target file does not exists
-            checkAllDependenciesExists(root);
+//            checkAllDependenciesExists(root);
             return true;
         } else {
 
@@ -166,6 +167,7 @@ bool executeNodeCommands(graph_node* root) {
                     close(out);
                 }
 
+                printf("%s\n", temphead->element);
                 execvp(cmd, argv);
                 // The exec() functions only return if an error has occurred.
                 // The return value is -1, and errno is set to indicate the error.
