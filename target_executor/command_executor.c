@@ -24,25 +24,6 @@ bool isLHSLessThanRHS(struct timespec lhs, struct timespec rhs) {
         return lhs.tv_sec < rhs.tv_sec;
 }
 
-void checkAllDependenciesExists(graph_node* root) {
-
-    linked_list_node* dependencies = root->dependencies;
-
-    while(dependencies) {
-        FILE *dependencyPointer = fopen(dependencies->element, "r");
-
-        if (!dependencyPointer) {
-            // Dependency file does not exists - THROW ERROR
-            printf("537make: *** No rule to make target '%s', needed by '%s'.  Stop.\n",
-                    dependencies->element, root->element);
-            exit(EXIT_FAILURE);
-        }
-        fclose(dependencyPointer);
-
-        dependencies = dependencies->next;
-    }
-}
-
 bool commandExecutionRequired(graph_node* root) {
 
     if(root->dependencies != NULL) {
@@ -52,7 +33,6 @@ bool commandExecutionRequired(graph_node* root) {
 
         if (!targetPointer) {
             // Target file does not exists
-//            checkAllDependenciesExists(root);
             return true;
         } else {
 
@@ -67,7 +47,7 @@ bool commandExecutionRequired(graph_node* root) {
 
                 if (!dependencyPointer) {
                     // Dependency file does not exists - THROW ERROR
-                    printf("537make: *** No rule to make target '%s', needed by '%s'.  Stop.\n",
+                    fprintf(stderr, "537make: *** No rule to make target '%s', needed by '%s'.  Stop.\n",
                             dependencies->element, root->element);
                     exit(EXIT_FAILURE);
                 } else {
@@ -97,7 +77,7 @@ bool executeNodeCommands(graph_node* root) {
         while (temphead != NULL) {
             pid_t pid = fork();
             if (pid == -1) { // Error, failed to fork()
-                printf("Failed to fork(). Terminating at once.");
+                fprintf(stderr, "Failed to fork(). Terminating at once.\n");
                 exit(EXIT_FAILURE);
             }
 
@@ -105,7 +85,7 @@ bool executeNodeCommands(graph_node* root) {
                 int status;
                 waitpid(pid, &status, 0);
                 if (status != EXIT_SUCCESS) {
-                    printf("Failed to execute command. Error status %d", status);
+                    fprintf(stderr, "Failed to execute command. Error status %d\n", status);
                     exit(EXIT_FAILURE);
                 }
                 temphead = temphead->next;
@@ -121,6 +101,9 @@ bool executeNodeCommands(graph_node* root) {
                 char copiedCmd[MAX_SIZE];
                 strncpy(copiedCmd, temphead->element, MAX_SIZE);
                 char *argv[MAX_SIZE];
+                for(unsigned int i = 0; i < MAX_SIZE; i++) {
+                    argv[i] = NULL;
+                }
                 int i = 0;
                 char *split = strtok(copiedCmd, " ");
                 while (split) {
@@ -143,8 +126,12 @@ bool executeNodeCommands(graph_node* root) {
                         split = strtok(NULL, " ");
                     }
                 }
-                argv[i] = NULL;
-                char *cmd = argv[0];
+//                argv[i] = NULL;
+
+                if (argv[0] == NULL) {
+                    fprintf(stderr, "NULL passed as a command for execution\n");
+                    exit(EXIT_FAILURE);
+                }
 
                 if (inputRedirection) {
 
@@ -169,7 +156,7 @@ bool executeNodeCommands(graph_node* root) {
                 }
 
                 printf("%s\n", temphead->element);
-                execvp(cmd, argv);
+                execvp(argv[0], argv);
                 // The exec() functions only return if an error has occurred.
                 // The return value is -1, and errno is set to indicate the error.
 
@@ -177,7 +164,7 @@ bool executeNodeCommands(graph_node* root) {
             }
 
             else { // IMPOSSIBLE ZONE
-                printf("PID can not be negative. Terminating at once.");
+                fprintf(stderr, "PID can not be negative. Terminating at once.");
                 _exit(EXIT_SUCCESS);
             }
         }
