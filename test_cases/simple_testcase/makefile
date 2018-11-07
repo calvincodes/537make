@@ -5,7 +5,6 @@ all: prog1 prog2 prog3
 
 prog1 : main1.o queue.o reader.o writer.o
 	echo Building prog1
-	
 	gcc -o prog1 main1.o queue.o reader.o writer.o
 
 	echo prog1 build successfully
@@ -76,7 +75,6 @@ clean_objs:
 	rm process2.o
 	rm graph.o
 	rm djikstra.o
-	
 	rm main1.c
 clean_prog1:
 	rm prog1

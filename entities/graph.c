@@ -37,12 +37,24 @@ graph_node* createConnections(graph_node* graphArray[], unsigned int size){
         linked_list_node *llNode = graphArray[i]->dependencies;
         int currChildCount = 0;
         while(llNode){
-
-            for(unsigned int j =0;j<size;j++){
-                if(strcmp(llNode->element, graphArray[j]->element) == 0){
-                    graphArray[i]->children[currChildCount++] = graphArray[j];
-                    break;
+            int isfile = 0;
+            int isTraget = 0;
+            FILE *dependencyPointer = fopen(llNode->element, "r");
+            if (dependencyPointer) {
+                isfile = 1;
+            } else {
+                for (unsigned int j = 0; j < size; j++) {
+                    if (strcmp(llNode->element, graphArray[j]->element) == 0) {
+                        graphArray[i]->children[currChildCount++] = graphArray[j];
+                        isTraget = 1;
+                        break;
+                    }
                 }
+            }
+            if(isfile == 0 && isTraget == 0){
+                printf("537make: *** No rule to make target '%s', needed by '%s'.  Stop.\n",
+                       llNode->element, graphArray[i]->element);
+                exit(EXIT_FAILURE);
             }
             llNode = llNode->next;
         }

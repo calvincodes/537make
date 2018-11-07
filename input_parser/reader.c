@@ -139,7 +139,10 @@ void reader(struct_input unprocessedInput) {
 
     } while (c != EOF);
 
-
+    if(curNode == 0){
+        fprintf(stderr, "537make: * No targets.  Stop.\n");
+        exit(EXIT_FAILURE);
+    }
     createConnections(graphNodeArray, curNode);
     int isCycleFound = is_cycle_found(curNode, graphNodeArray);
 
@@ -148,23 +151,30 @@ void reader(struct_input unprocessedInput) {
         exit(EXIT_FAILURE);
     }
 
-    for(unsigned int x = 0; x < MAX_SIZE; x++) {
-        if(unprocessedInput.targets_to_build[x] == NULL){
-            break;
+    if(unprocessedInput.targets_to_build[0] == NULL){
+        bool executed = traverseAndExecute(graphNodeArray[0]);
+        if (!executed) {
+            printf("537make: '%s' is up to date.\n", graphNodeArray[0]->element);
         }
-        int targetFound = 0;
-        for(unsigned int i = 0;i<curNode;i++){
-            if(strcmp(graphNodeArray[i]->element, unprocessedInput.targets_to_build[x]) == 0){
-                targetFound = 1;
-                bool executed = traverseAndExecute(graphNodeArray[i]);
-                if (!executed) {
-                    printf("537make: '%s' is up to date.\n", graphNodeArray[i]->element);
-                }
+    } else {
+        for (unsigned int x = 0; x < MAX_SIZE; x++) {
+            if (unprocessedInput.targets_to_build[x] == NULL) {
                 break;
             }
-        }
-        if(!targetFound){
-            fprintf(stderr, "Specified target %s not found", unprocessedInput.targets_to_build[x] );
+            int targetFound = 0;
+            for (unsigned int i = 0; i < curNode; i++) {
+                if (strcmp(graphNodeArray[i]->element, unprocessedInput.targets_to_build[x]) == 0) {
+                    targetFound = 1;
+                    bool executed = traverseAndExecute(graphNodeArray[i]);
+                    if (!executed) {
+                        printf("537make: '%s' is up to date.\n", graphNodeArray[i]->element);
+                    }
+                    break;
+                }
+            }
+            if (!targetFound) {
+                fprintf(stderr, "Specified target %s not found", unprocessedInput.targets_to_build[x]);
+            }
         }
     }
 
