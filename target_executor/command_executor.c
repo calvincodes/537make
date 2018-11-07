@@ -85,7 +85,9 @@ bool executeNodeCommands(graph_node* root) {
                 int status;
                 waitpid(pid, &status, 0);
                 if (status != EXIT_SUCCESS) {
-                    fprintf(stderr, "Failed to execute command. Error status %d\n", status);
+
+                    fprintf(stderr, "537make: recipe for target '%s' failed\n", root->element);
+                    fprintf(stderr, "537make: *** [%s] Error %d\n", root->element, status);
                     exit(EXIT_FAILURE);
                 }
                 temphead = temphead->next;
@@ -126,7 +128,6 @@ bool executeNodeCommands(graph_node* root) {
                         split = strtok(NULL, " ");
                     }
                 }
-//                argv[i] = NULL;
 
                 if (argv[0] == NULL) {
                     fprintf(stderr, "NULL passed as a command for execution\n");
