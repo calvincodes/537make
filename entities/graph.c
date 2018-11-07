@@ -56,11 +56,11 @@ int cyclic_util(int nodeNo, int visited[], int stack[], graph_node *graphNodeArr
     }
     for(unsigned int i=0;i<MAX_SIZE && node->children[i] != NULL;i++){
         if (!visited[node->children[i]->nodeNo] && cyclic_util(node->children[i]->nodeNo, visited, stack, graphNodeArray, graphNodeArray[nodeNo]->children[i])) {
-            fprintf(stderr, "%s", node->children[i]->element);
+//            fprintf(stderr, "%s", node->children[i]->element);
             return 1;
         }
         else if (stack[node->children[i]->nodeNo]) {
-            fprintf(stderr, "%s", node->children[i]->element);
+//            fprintf(stderr, "%s", node->children[i]->element);
             return 1;
         }
     }
@@ -80,7 +80,7 @@ int is_cycle_found(unsigned int graphSize, graph_node *graphNodeArray[]){
 
     for(unsigned int i=0;i<graphSize;i++){
         if(cyclic_util(graphNodeArray[i]->nodeNo, visited, stack, graphNodeArray, graphNodeArray[i])){
-            fprintf(stderr, "%s", graphNodeArray[i]->element);
+//            fprintf(stderr, "%s", graphNodeArray[i]->element);
             return 1;
         }
     }
