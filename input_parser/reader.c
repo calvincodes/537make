@@ -59,7 +59,7 @@ void reader(struct_input unprocessedInput) {
         } while (c != '\n' && c != EOF && index < MAX_SIZE);
 
         if (index >= MAX_SIZE) {
-            fprintf(stderr, "THIS LINE EXHAUSTED THE BUFFER SIZE %d AND HAS BEEN DISCARDED\n", MAX_SIZE);
+            fprintf(stderr, "THIS LINE EXHAUSTED THE BUFFER SIZE %d. Terminating the program\n", MAX_SIZE);
             index = 0;
             free(line);
             exit(EXIT_FAILURE);
@@ -143,7 +143,7 @@ void reader(struct_input unprocessedInput) {
     int isCycleFound = is_cycle_found(curNode, graphNodeArray);
 
     if (isCycleFound) {
-        fprintf(stderr, "Cyclic dependency found. Terminating.");
+        fprintf(stderr, "\nCyclic dependency found. Terminating.");
         exit(EXIT_FAILURE);
     }
 
