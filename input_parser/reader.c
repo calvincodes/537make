@@ -61,7 +61,6 @@ void reader(struct_input unprocessedInput) {
 
         if (index >= MAX_SIZE) {
             fprintf(stderr, "THIS LINE EXHAUSTED THE BUFFER SIZE %d. Terminating the program\n", MAX_SIZE);
-            index = 0;
             free(line);
             exit(EXIT_FAILURE);
         } else {
@@ -109,7 +108,7 @@ void reader(struct_input unprocessedInput) {
 
             char *targetName = malloc(sizeof(char) * MAX_SIZE);
 
-            strcpy(targetName, token);
+            strncpy(targetName, token, MAX_SIZE);
             targetName = stripWhiteSpace(targetName);
 
             token = strtok(NULL, " ");
@@ -139,10 +138,13 @@ void reader(struct_input unprocessedInput) {
 
     } while (c != EOF);
 
+    free(line);
+
     if(curNode == 0){
         fprintf(stderr, "537make: * No targets.  Stop.\n");
         exit(EXIT_FAILURE);
     }
+
     createConnections(graphNodeArray, curNode);
     int isCycleFound = is_cycle_found(curNode, graphNodeArray);
 

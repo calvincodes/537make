@@ -19,7 +19,7 @@ linked_list_node *createLLNode(char *element) {
     }
 
     llNode->element = malloc(MAX_SIZE * sizeof(char));
-    strcpy(llNode->element, element);
+    strncpy(llNode->element, element, MAX_SIZE);
     llNode->next = NULL;
     return llNode;
 }
