@@ -23,6 +23,23 @@ bool isLHSLessThanRHS(struct timespec lhs, struct timespec rhs) {
         return lhs.tv_sec < rhs.tv_sec;
 }
 
+void checkAllDependenciesExists(graph_node* root) {
+
+    linked_list_node* dependencies = root->dependencies;
+
+    while(dependencies) {
+        FILE *dependencyPointer = fopen(dependencies->element, "r");
+
+        if (!dependencyPointer) {
+            // Dependency file does not exists - THROW ERROR
+            printf("537make: *** No rule to make target '%s', needed by '%s'.  Stop.\n",
+                    dependencies->element, root->element);
+            exit(EXIT_FAILURE);
+        }
+
+        dependencies = dependencies->next;
+    }
+}
 
 bool commandExecutionRequired(graph_node* root) {
 
@@ -33,6 +50,7 @@ bool commandExecutionRequired(graph_node* root) {
 
         if (!targetPointer) {
             // Target file does not exists
+            checkAllDependenciesExists(root);
             return true;
         } else {
 
@@ -47,7 +65,8 @@ bool commandExecutionRequired(graph_node* root) {
 
                 if (!dependencyPointer) {
                     // Dependency file does not exists - THROW ERROR
-                    printf("Dependency file '%s' does NOT exists", dependencies->element);
+                    printf("537make: *** No rule to make target '%s', needed by '%s'.  Stop.\n",
+                            dependencies->element, root->element);
                     exit(EXIT_FAILURE);
                 } else {
                     fstat(fileno(dependencyPointer), &dependencyStat);
