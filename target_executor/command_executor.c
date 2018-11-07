@@ -128,6 +128,7 @@ bool executeNodeCommands(graph_node* root) {
                         split = strtok(NULL, " ");
                     }
                 }
+                argv[i] = NULL;
 
                 if (argv[0] == NULL) {
                     fprintf(stderr, "NULL passed as a command for execution\n");
