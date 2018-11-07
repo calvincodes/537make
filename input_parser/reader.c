@@ -53,15 +53,17 @@ void reader(struct_input unprocessedInput) {
         // Concatente everything line;
         do {
             c = fgetc(file_pointer);
+            if(c == '\0'){
+                fprintf(stderr, "Null character encountered at line No %d. Exiting the program", lineNo);
+            }
             line[index++] = (char) c;
         } while (c != '\n' && c != EOF && index < MAX_SIZE);
 
         if (index >= MAX_SIZE) {
-            fprintf(stderr, "THIS LINE EXHAUSTED THE BUFFER SIZE %d AND HAS BEEN DISCARDED\n", MAX_SIZE);
+            fprintf(stderr, "THIS LINE EXHAUSTED THE BUFFER SIZE %d. Terminating the program\n", MAX_SIZE);
             index = 0;
             free(line);
-            line = (char *) malloc(MAX_SIZE * sizeof(char));
-            continue;
+            exit(EXIT_FAILURE);
         } else {
             line[index - 1] = '\0';
         }
@@ -142,7 +144,7 @@ void reader(struct_input unprocessedInput) {
     int isCycleFound = is_cycle_found(curNode, graphNodeArray);
 
     if (isCycleFound) {
-        fprintf(stderr, "Cyclic dependency found. Terminating.");
+        fprintf(stderr, "\nCyclic dependency found. Terminating.");
         exit(EXIT_FAILURE);
     }
 
