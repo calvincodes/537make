@@ -1,10 +1,10 @@
 CC = gcc
-WARNING_FLAGS = -Wall -Wextra
+WARNING_FLAGS = -Wall -Wextra -g -O0
 EXE = 537make
 SCAN_BUILD_DIR = scan-build-out
 
 all: driver.o struct_input.o linked_list.o graph.o constants.o traversal.o reader.o option_parser.o command_executor.o validator.o
-	$(CC) -o $(EXE) driver.o struct_input.o linked_list.o graph.o constants.o traversal.o reader.o option_parser.o command_executor.o validator.o
+	$(CC) $(WARNING_FLAGS) -o $(EXE) driver.o struct_input.o linked_list.o graph.o constants.o traversal.o reader.o option_parser.o command_executor.o validator.o
 
 clean:
 	rm -f $(EXE) *.o

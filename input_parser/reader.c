@@ -106,10 +106,11 @@ void reader(struct_input unprocessedInput) {
                 exit(EXIT_FAILURE);
             }
 
-            char *targetName = malloc(sizeof(char) * MAX_SIZE);
+            char *targetName1 = malloc(sizeof(char) * MAX_SIZE);
 
-            strncpy(targetName, token, MAX_SIZE);
-            targetName = stripWhiteSpace(targetName);
+            strncpy(targetName1, token, MAX_SIZE);
+            char *targetName = stripWhiteSpace(targetName1);
+            free(targetName1);
 
             token = strtok(NULL, " ");
 
