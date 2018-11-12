@@ -49,7 +49,7 @@ void validateTarget(char *line, unsigned int size, int lineNo) {
 }
 
 char *stripWhiteSpace(char *str) {
-    char *newStr = malloc(MAX_SIZE * sizeof(char));
+    char *newStr = calloc(MAX_SIZE, sizeof(char));
     int i = 0;
     while (*str != '\0') {
         if (*str != ' ') {
