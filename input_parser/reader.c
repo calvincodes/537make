@@ -183,6 +183,10 @@ void reader(struct_input unprocessedInput) {
 
     for (unsigned int j = 0; j < curNode; ++j) {
 
+        if (graphNodeArray[j]->element) {
+            free(graphNodeArray[j]->element);
+        }
+
         if (graphNodeArray[j]->commands) {
 
             linked_list_node* head = graphNodeArray[j]->commands;
