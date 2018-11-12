@@ -20,7 +20,7 @@ graph_node* createGraphNode(char *element, linked_list_node* dependencies, linke
     graphNode->element = element;
     graphNode->dependencies = dependencies;
     graphNode->commands = commands;
-    graphNode->children = (graph_node**) malloc(MAX_SIZE * sizeof(graphNode));
+    graphNode->children = (graph_node**) calloc(MAX_SIZE, sizeof(graphNode));
     return graphNode;
 }
 
