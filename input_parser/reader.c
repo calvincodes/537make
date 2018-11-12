@@ -181,6 +181,36 @@ void reader(struct_input unprocessedInput) {
         }
     }
 
+    for (unsigned int j = 0; j < curNode; ++j) {
+
+        if (graphNodeArray[j]->commands) {
+
+            linked_list_node* head = graphNodeArray[j]->commands;
+            linked_list_node* tmp;
+
+            while (head != NULL) {
+                tmp = head;
+                head = head->next;
+                free(tmp->element);
+                free(tmp);
+            }
+        }
+
+        if (graphNodeArray[j]->dependencies) {
+
+            linked_list_node* head = graphNodeArray[j]->dependencies;
+            linked_list_node* tmp;
+
+            while (head != NULL) {
+                tmp = head;
+                head = head->next;
+                free(tmp->element);
+                free(tmp);
+            }
+        }
+
+        free(graphNodeArray[j]);
+    }
 
     if (fclose(file_pointer)) {
         fprintf(stderr, "Failed to close makefile or Makefile");
