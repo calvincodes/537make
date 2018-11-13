@@ -1,0 +1,15 @@
+valgrind --leak-check=yes --track-origins=yes --read-var-info=yes 537make
+==19613== Memcheck, a memory error detector
+==19613== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==19613== Using Valgrind-3.13.0 and LibVEX; rerun with -h for copyright info
+==19613== Command: 537make
+==19613==
+==19613==
+==19613== HEAP SUMMARY:
+==19613==     in use at exit: 0 bytes in 0 blocks
+==19613==   total heap usage: 462 allocs, 462 frees, 471,608 bytes allocated
+==19613==
+==19613== All heap blocks were freed -- no leaks are possible
+==19613==
+==19613== For counts of detected and suppressed errors, rerun with: -v
+==19613== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

@@ -5,15 +5,6 @@ Uses fork and execvp for creation of new processes and command execution.
 
 ## Valgrind Task List
 
-* **Existing Issue** 
-    * Issue: Definitely lost memory at graph.c:23 called from reader.c:118
-    * Can NOT fix: The above is pointing to free the children nodes of some of the graph nodes.
-    Issue in fixing the same is that we are freeing up the nodes of the graph individual as well.
-    Hence, we can not keep a track of exactly which child is required to be freed.
-    Freeing up all the children of each node is not possible as it might lead to double frees,
-    because we might already have freed up a children while freeing up the individual nodes.
-    * Also, this memory is getting used till the end of program and certainly getting freed as the program exists.
-
 * **Fixed Issues**
 
 * *driver.c*:15 

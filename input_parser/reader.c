@@ -213,12 +213,7 @@ void reader(struct_input unprocessedInput) {
             }
         }
 
-//        if (graphNodeArray[j]->children[0] == NULL) {
-//            for (int i = 0; i < MAX_SIZE; ++i) {
-//                free(graphNodeArray[j]->children[i]);
-//            }
-//        }
-
+        free(graphNodeArray[j]->children);
         free(graphNodeArray[j]);
     }
 
