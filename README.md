@@ -12,6 +12,7 @@ Uses fork and execvp for creation of new processes and command execution.
     Hence, we can not keep a track of exactly which child is required to be freed.
     Freeing up all the children of each node is not possible as it might lead to double frees,
     because we might already have freed up a children while freeing up the individual nodes.
+    * Also, this memory is getting used till the end of program and certainly getting freed as the program exists.
 
 * **Fixed Issues**
 
