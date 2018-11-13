@@ -1,6 +1,6 @@
 //
-// Created by Anshu on 11/2/18.
-// Co-author Arpit Jain
+// Created by Anshu (averma27) on 11/2/18.
+// Co-author Arpit Jain (ajain74)
 //
 
 #include <stdio.h>

@@ -1,6 +1,6 @@
 //
-// Created by Arpit Jain on 11/1/18.
-// Co-author Anshu Verma
+// Created by Arpit Jain (ajain74) on 11/1/18.
+// Co-author Anshu Verma (averma27)
 //
 
 #ifndef PROJECT_NODE_H

@@ -1,6 +1,6 @@
 //
-// Created by Anshu on 11/3/18.
-// Co-author Anshu Verma
+// Created by Anshu (averma27) on 11/3/18.
+// Co-author Anshu Verma (averma27)
 //
 
 #include <stdio.h>
