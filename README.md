@@ -3,6 +3,38 @@
 A build tool to read, validate and execute make files.
 Uses fork and execvp for creation of new processes and command execution.
 
+## Valgrind Task List
+
+* **Existing Issue** 
+    * Issue: Definitely lost memory at graph.c:23 called from reader.c:118
+    * Can NOT fix: The above is pointing to free the children nodes of some of the graph nodes.
+    Issue in fixing the same is that we are freeing up the nodes of the graph individual as well.
+    Hence, we can not keep a track of exactly which child is required to be freed.
+    Freeing up all the children of each node is not possible as it might lead to double frees,
+    because we might already have freed up a children while freeing up the individual nodes.
+
+* **Fixed Issues**
+
+* *driver.c*:15 
+    * Issue: Definitely lost memory
+    * Fix: freeing the memory allocated for the data structure used for parsing command line arguments.
+    
+* *entities/graph.c*:23
+    * Issue: Uninitialised memory
+    * Fix: Replacing malloc with calloc so that variable is always initialised.
+    
+* *input_parser/reader.c*:109-113
+    * Issue: Definitely lost memory
+    * Fix: freeing the memory allocated for the string used for parsing target names.
+    
+* *input_parser/reader.c*:184-223 
+    * Issue: Definitely lost memory
+    * Fix: freeing the memory allocated for the all the graph nodes and internal linked lists.
+    
+* *utils/validator.c*:23
+    * Issue: Uninitialised memory
+    * Fix: Replacing malloc with calloc so that variable is always initialised.
+
 ## Task List
 
 This project is divided in the following major modules.
