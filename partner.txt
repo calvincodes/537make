@@ -1,3 +1,0 @@
-student,full name (as in Canvas),Net ID,CS ID,wisc email (not CS email),campus ID number
-1,Arpit Jain,ajain74,ajain,ajain74@wisc.edu,9079978582
-2,Anshu Verma,averma27,anshu,averma27@wisc.edu,9079955366
